@@ -1,0 +1,304 @@
+﻿@model Economia_Social_Y_Solidaria.Controllers.MisCompras
+@{
+    ViewBag.Title = "Historial";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+<div class="container-fluid comprascon" style="margin-top:100px">
+</div>
+<div class="modal fade" id="comentarmodal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form id="calificarform" method="post" role="form">
+            <input type="hidden" name="idCompra" id="idCompra" />
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="js-title-step"></h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default js-btn-step pull-left" data-orientation="cancel" data-dismiss="modal"></button>
+                    <button type="button" class="btn btn-warning js-btn-step" data-orientation="previous"></button>
+                    <button type="button" class="btn btn-success js-btn-step" data-orientation="next"></button>
+                </div>
+            </div><!-- /.modal-content -->
+        </form>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="row hide" id="comentarproducto">
+    <div class="row col-md-12">
+        <div class="col-md-8">
+            <input type="hidden" name="idProducto" class="idProducto" />
+            <label>Dejanos tu opinion, nos interesa para mejorar!</label>
+            <textarea name="tComentarios" required tabindex="1" class="form-control tComentarios" maxlength="180"></textarea>
+            <span class="help-block pull-right totalcaracteres" style="color:red"></span>
+        </div>
+        <div class="col-md-4">
+            <label>Puntaje</label>
+            <input name="rating" type="text" class="estrellas">
+        </div>
+    </div>
+    <div class="row col-md-12">
+        <span class="help-block pull-right validacionerror" style="color:red; display:none"></span>
+    </div>
+    <div class="col-md-12"><span class="help-block">*No son obligatorios los comentarios</span></div>
+</div>
+<div id="compra" style="display:none">
+    <div class="card">
+        <div class="row">
+            @*<img class="slide-image imagen" alt="">*@
+        </div>
+        <div class="container col-md-12">
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>Encargado en <b class="local"></b></h4>
+                </div>
+                <div class="col-md-4" style="text-align:right; vertical-align:middle">
+                    <h6><b class="fecha"></b></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>Estado del pedido: <b class="estado"></b></h4>
+                </div>
+            </div>
+            <table class="table" id="tabla_listado">
+                <thead>
+                    <tr>
+                        <th width="60%">Producto</th>
+                        <th width="20%">Cantidad</th>
+                        <th width="20%">$ Unidad</th>
+                    </tr>
+                </thead>
+                <tbody class="productos"></tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </div>
+        <div class="row btneditar" style="display:none">
+            <div class="col-md-4 col-md-offset-2">
+                <button class="btn btn-card form-control modificar" data-loading-text="Espere..."><span class="glyphicon glyphicon-edit"></span> Modificar</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-card form-control borrar" data-loading-text="Espere..."><span class="glyphicon glyphicon-trash"></span> Cancelar</button>
+            </div>
+        </div>
+        <div class="row btncomentar" style="display:none">
+            <div class="col-md-5 col-md-offset-3">
+                <button class="btn btn-card form-control comentar" data-loading-text="Espere..."><span class="glyphicon glyphicon-pencil"></span> Comentar</button>
+            </div>
+        </div>
+        <div class="row btnrepetir" style="display:none">
+            <div class="col-md-5 col-md-offset-3">
+                <button class="btn btn-card form-control repetir" data-loading-text="Espere..."><span class="fa fa-repeat"></span> Repetir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        var compras = @Html.Raw(Json.Encode(Model.Compras));
+        cargarDatos(compras);
+
+        function cargarDatos(compras){
+            var container = $(".comprascon");
+            container.empty();
+
+            var actual = 0;
+            while ( actual < compras.length )
+            {
+                var row = $("<div/>");
+                row.addClass("row")
+                for ( var col = 0; col < 2 && actual < compras.length ; col++){
+                    agregarCompra(col, compras[actual]).appendTo(row);
+                    actual++;
+                }
+                row.appendTo(container);
+            }
+        }
+
+        function agregarCompra(col, comprado){
+            //imagen local fecha estado
+            var nueva = $("#compra").clone();
+            nueva.addClass("col-md-5");
+            if (col == 0)
+                nueva.addClass("col-md-offset-1");
+
+            nueva.find(".card").attr("data-idcompra", comprado.idCompra);
+            nueva.find(".imagen").attr('src','/Imagenes/producto-' + comprado.productos[0].idProducto + '.jpg');
+            nueva.find(".local").text(comprado.local + " - " + comprado.barrio);
+            nueva.find(".fecha").text(comprado.fecha);
+            nueva.find(".estado").text(comprado.estado);
+            if (comprado.editar )
+                nueva.find(".btneditar").show();
+            if (comprado.comentar )
+                nueva.find(".btncomentar").show();
+            if (comprado.comentado )
+                nueva.find(".btnrepetir").show();
+
+
+            nueva.removeAttr('id');
+
+            var precioTotal = 0;
+            $.each(comprado.productos, function(i,val){
+                precioTotal += (val.precioUnidad * val.cantidad);
+                nueva.find(".productos").append("<tr data-idproducto='" + comprado.productos.idProducto + "'><td>" + val.nombre + ( val.marca == "" ? "" :  " - " + val.marca ) + " - " + val.presentacion + "</td><td>" +val.cantidad+ "</td><td>$" +val.precioUnidad+ "</td></tr>");
+            });
+            nueva.find(".productos").append("<tr><td></td><td  style='text-align:right;' colspan=2 ><b>Total: $" + precioTotal+ "</b></td></tr>");
+            nueva.show();
+
+            return nueva;
+        }
+
+        $(document).on("click", ".borrar", function(e){
+            $(e.currentTarget).closest('.row').find('button').button('loading')
+
+            var id = $(".borrar").closest('.card').data("idcompra");
+            $.post("/Compras/CancelarPedido", {idCompra: id}, function(data){
+                cargarDatos(data.Compras);
+            });
+
+        });
+
+        $(document).on("click", ".modificar", function(e){
+            $(e.currentTarget).closest('.row').find('button').button('loading')
+
+            var id = $(this).closest('.card').data("idcompra");
+
+            var todo = {};
+            var compra = returnObj(compras, id);
+            todo.idCompra = compra.idCompra;
+            todo.idLocal = compra.idLocal;
+            todo.productos = [];
+            $.each(compra.productos, function(i,val){
+                var prod = {};
+                prod["id"] = val.idProducto;
+                prod["nombre"] = val.nombre;
+                prod["precio"] = val.precioUnidad;
+                prod["cantidad"] = val.cantidad;
+                todo.productos.push(prod);
+            });
+
+
+
+            Cookies.set('editar', todo, { path: '/' });
+            window.location.href = "/Compras/Carrito";
+
+        });
+
+        $('#comentarmodal').modalSteps({
+            completeCallback: function(){
+                $.blockUI({ message: null });
+                $.post("/Compras/Calificar", $('#comentarmodal').find("form").serialize(), function(devuelta){
+                    $.unblockUI();
+                    if (devuelta.bien){
+                        $.toast({
+                            heading: 'Frente de Economía Social y Solidaria!',
+                            text: 'Gracias por dejarnos tus comentarios',
+                            icon: 'info',
+                            loader: false,
+                            hideAfter: 5000
+                        })
+
+                        $.each(devuelta.ids, function(i,val){
+                            var ar = returnObjProd(compras[0].productos, val);
+                            ar.comentado = true
+                        });
+                        
+
+                        if ( devuelta.todoComentado ){
+                            $("[data-idcompra=" + devuelta.idCompra + "]").find(".btncomentar").hide();
+                            $("[data-idcompra=" + devuelta.idCompra + "]").find(".estado").text(devuelta.comentario);
+                            $("[data-idcompra=" + devuelta.idCompra + "]").find(".btnrepetir").show();
+                        }
+                    }
+                });
+            },
+            callbacks: {
+                '*': function(e){
+                    $(".js-title-step").effect("highlight", {}, 1000);
+                }
+            }
+        });
+
+
+        $(document).on("click", ".comentar", function(e){
+
+            boton = $(e.currentTarget);
+            boton.closest('.row').find('button').button('loading');
+            var idCompra = boton.closest('.card').data('idcompra');
+
+            var compra = returnObj(compras, idCompra);
+
+            $("#comentarmodal").find(".modal-body").empty();
+            $("#comentarmodal").find("#idCompra").val(idCompra);
+
+
+            var step = 1;
+            $.each(compra.productos, function(i,val){
+                if(!val.comentado){
+                    var nuevo = $("#comentarproducto").clone();
+                    nuevo.attr({"data-step": step, "data-title": val.nombre});
+                    nuevo.find(".idProducto").val(val.idProducto);
+                    nuevo.show();
+
+                    step++;
+                    $("#comentarmodal").find(".modal-body").append(nuevo);
+                }
+
+            });
+
+            $("#comentarmodal").find('#idCompra').val(idCompra);
+            $("#comentarmodal").modal('show');
+        });
+
+        $(document).on("click", ".repetir", function(e){
+
+            boton = $(e.currentTarget);
+            boton.closest('.row').find('button').button('loading');
+            var idCompra = boton.closest('.card').data('idcompra');
+
+
+        });
+
+        $("#comentarmodal").on('hidden.bs.modal', function () {
+            boton.closest('.row').find('button').button('reset')
+            $(".validacionerror").hide();
+        });
+
+        $("#comentarmodal").on('show.bs.modal', function () {
+            $("#comentarmodal").find(".estrellas").rating({
+                min:0,
+                max:5,
+                step:1,
+                size:'xs',
+                showClear:false,
+                showCaption:false});
+        });
+
+        $(document).on("keyup", ".tComentarios", function(){
+            var error = $(".validacionerror");
+            if ( error.is(":visible"))
+                error.hide();
+
+            var caract = $(this).closest('#comentarproducto')
+
+            var total = parseInt($(this).attr("maxlength"));
+            var actuales = $(this).val().length;
+            caract.find(".totalcaracteres").text("Caracteres restantes: " + (total - actuales));
+        });
+
+        function returnObj(arr,r){
+            return $.grep(arr, function(elem,index){
+                return elem ? elem.idCompra == r : false;
+            })[0];
+        }
+
+        function returnObjProd(arr,r){
+            return $.grep(arr, function(elem,index){
+                return elem ? elem.idProducto == r : false;
+            })[0];
+        }
+
+    </script>
+}

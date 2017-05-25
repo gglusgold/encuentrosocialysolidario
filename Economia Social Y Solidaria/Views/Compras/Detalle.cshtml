@@ -1,0 +1,80 @@
+﻿@model Economia_Social_Y_Solidaria.Controllers.Changuito
+
+@{
+    ViewBag.Title = "Detalle";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-md-3" style="margin-bottom:30px">
+        </div>
+
+        <div class="col-md-9">
+
+            <div class="thumbnail">
+                <img class="img-responsive" src="~/Imagenes/producto-@(Model.idProducto).jpg" style="max-height:450px" alt="">
+                <div class="caption-full">
+                    <h4 class="pull-right">$@(Model.precio)</h4>
+                    <h4>
+                        <a href="#">@(Model.nombre)</a>
+                    </h4>
+                    <p>@Html.Raw(Model.descripcion)</p>
+                </div>
+                <div class="row" style="padding:5px 10px">
+                    <div class="col-md-9 pocopadding">
+                        <p class="pcomentarios" style="margin-top: 5PX;">@(Model.comentarios) comentarios</p>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="rating pestrellas pull-right" value="@(Model.rating)" min=0 max=5 step=1 data-size="xs" disabled="true" data-show-caption="false" data-show-clear="false">
+                    </div>
+                </div>
+            </div>
+
+            <div class="well">
+
+                @foreach(var comentarios in Model.comentario)
+                {
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input type="number" class="rating pestrellas pull-right" value="@(comentarios.estrellas)" min=0 max=5 step=1 data-size="xxs" disabled="true" data-show-caption="false" data-show-clear="false">
+                        </div>
+                        <div class="col-md-6">
+                            <h5>@(comentarios.vecinx)</h5>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="pull-right">@(comentarios.haceCuanto) dias atras</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>@(comentarios.comentario)</p>
+                        </div>
+                    </div>
+
+                    <hr>
+                }
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        var compras = @Html.Raw(Json.Encode(Model));
+
+        $(document).on("click","#volver_atras", function(){
+            $.redirectPost("/Compras/Carrito", { idCategoria:compras.categoria})
+        });
+
+      
+
+
+    </script>
+}

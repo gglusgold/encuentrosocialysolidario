@@ -1,0 +1,485 @@
+﻿@{
+    ViewBag.Title = "Lista";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+
+@*<div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 style="margin-top: 0">Locales</h2>
+            </div>
+            <div class="col-md-6">
+                <a id="AgregarNuevo" class="btn btn-primary" style="float: right;"><span class="glyphicon glyphicon-plus"></span> Nuevo Local</a>
+            </div>
+            <div class="col-md-12">
+                <table id="tabla" class="table table-bordered bg_blanco table-hover"></table>
+                <div id="abm"></div>
+            </div>
+        </div>
+    </div>
+
+
+    @section scripts{
+        <script type="text/javascript">
+            $("a[href='/Locales/Locales']").closest("li").addClass("active");
+
+            var columnas = [
+                   {
+                       //estos son de bootstrap table
+                       field: "idLocal",
+                       valign: 'middle',
+                       visible: false,
+                       edit: true,
+                       title: "Codigo",
+                       opciones: {
+                           editar: {
+                               atributos: { readonly: true }
+                           }
+                       }
+                   },
+                   {
+                       field: "nombre",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Nombre",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "input",
+                           atributos: { input: { required: false } }
+                       }
+                   },
+                   {
+                       field: "direccion",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Direccion",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "input",
+                           atributos: { input: { required: true } }
+                       }
+                   },
+                   {
+                       field: "barrio",
+                       align: 'left',
+                       valign: 'middle',
+                       title: "Barrio",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "input",
+                           atributos: { input: { required: true } }
+                       }
+                   },
+                   {
+                       field: "horario",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Horario",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "input",
+                           atributos: { input: { required: true } }
+                       }
+                   },
+                   {
+                       field: "comuna",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Comuna",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "input",
+                           atributos: { input: { required: true } }
+                       }
+                   },
+                   {
+                       field: "circuitoId",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Categoría",
+                       visible: false,
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "select",
+                           source: "/Circuitos/Lista",
+                           atributos: { input: { required: true } }
+                       }
+                   },
+                   {
+                       field: "circuito",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Categoría",
+                       sortable: "true",
+                       create: false,
+                       edit: false,
+                   },
+                   {
+                       field: 'editar',
+                       title: 'Editar',
+                       valign: 'middle',
+                       align: 'center',
+                       width: '5%',
+                       events: {
+                           'click .Editar': function (e, value, row, index) {
+                               abm.Magyp("Mostrar", true, row, index);
+                           }
+                       },
+                       formatter: function operateFormatter(value, row, index) {
+                           return "<a style='cursor:pointer' class='Editar' title='Editar'><i class='glyphicon glyphicon-edit'></i></a>";
+
+                       }
+                   },
+                   {
+                       field: 'activo',
+                       title: 'Activo',
+                       valign: 'middle',
+                       align: 'center',
+                       width: '5%',
+                       events: {
+                           'click .Activo': function (e, value, row, index) {
+
+                               var que = $(e.target).hasClass("glyphicon-ok");
+                               $(e.target).removeAttr("class").addClass("fa fa-circle-o-notch fa-spin fa-fw").closest("a").addClass("notactive");
+                               $.post("/Locales/Desactivar", { idLocal: row.idLocal, activar: !que }, function (response) {
+                                   $(e.target).removeAttr("class").addClass("glyphicon").addClass(response ? "glyphicon-ok" : "glyphicon-remove").closest("a").removeClass("notactive");
+                               });
+                           }
+                       },
+                       formatter: function operateFormatter(value, row, index) {
+                           return "<a style='cursor:pointer' class='Activo' title='Activar'><i class='glyphicon " + (value ? "glyphicon-ok" : "glyphicon-remove") + "'></i></a>";
+                           //return "<a style='cursor:pointer' class='Borrar' title='Borrar'><i class='glyphicon glyphicon-trash'></i></a>";
+
+                       }
+                   }
+            ];
+
+            var tabla = $("#tabla");
+            tabla.bootstrapTable({
+                url: "/Locales/Lista",
+                method: "POST",
+                columns: columnas,
+            });
+
+            var abm = $("#abm").Magyp({
+                nombre: "Nuevo Local",
+                fields: columnas,
+                boostrap: true,
+                unico: true,
+                url: '/Locales/Crear',
+                urlEditar: '/Locales/Editar',
+                grabado: function (editando, data, index) {
+                    tabla.bootstrapTable("refresh");
+                }
+            });
+
+            $("#AgregarNuevo").on("click", function () {
+                abm.Magyp("Mostrar", false);
+            });
+
+        </script>
+    }*@
+
+<style>
+    td:first-child {
+        text-align: center;
+    }
+
+    jtable-child-table-container {
+        padding: 5px 20px 5px 20px;
+    }
+
+    .ui-dialog {
+        z-index: 9999;
+    }
+</style>
+
+<div class="container-fluid" style="margin-top:70px">
+    <h2>Locales</h2>
+    <div id="Tabla"></div>
+</div>
+
+<div id="dialog" title="Asignar productos" style="display:none">
+
+</div>
+
+<div id="dialog-confirm" title="Des/activar local?" style="display:none">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>Seguro que queres des/activar el local?</p>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        $("a[href='/Locales/Locales']").closest("li").addClass("active");
+
+        var tabla = $('#Tabla').jtable({
+            title: 'Listado de locales',
+            actions: {
+                listAction: '/Locales/Lista',
+                createAction: '/Locales/Crear',
+                deleteAction: '/Locales/Borrar',
+                updateAction: '/Locales/Editar'
+            },
+            fields: {
+                idLocal: {
+                    key: true,
+                    list: false
+                },
+                Productos: {
+                    title: 'Productos',
+                    width: '5%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    display: function (localesData) {
+                        //Create an image that will be used to open child table
+                        var $img = $('<img style="cursor:pointer" src="/Imagenes/Fijas/box64.png" title="Editar Productos" />');
+                        //Open child table when user clicks the image
+                        $img.click(function () {
+                            tabla.jtable('openChildTable',
+                                    $img.closest('tr'),
+                                    {
+                                        title: localesData.record.direccion + ' - Lista Productos',
+                                        actions: {
+                                            listAction: '/ProductosLocal/Lista?idLocal=' + localesData.record.idLocal,
+                                            //deleteAction: '/ProductosLocal/Sacar'
+                                        },
+                                        toolbar: {
+                                            hoverAnimation: true, //Enable/disable small animation on mouse hover to a toolbar item.
+                                            hoverAnimationDuration: 60, //Duration of the hover animation.
+                                            hoverAnimationEasing: undefined, //Easing of the hover animation. Uses jQuery's default animation ('swing') if set to undefined.
+                                            items: [{
+                                                icon: '/Css/metro/add.png',
+                                                text: 'Asignar productos',
+                                                click: function () {
+                                                    mostrarProductos(localesData.record.idLocal);
+                                                }
+                                            },
+                                            {
+                                                icon: '/Css/metro/add.png',
+                                                text: 'Replicar a local',
+                                                click: function () {
+                                                    mostrarLocales(localesData.record.idLocal);
+                                                }
+                                            }]
+                                        },
+                                        fields: {
+                                            localId: {
+                                                type: 'hidden',
+                                                defaultValue: localesData.record.idLocal
+                                            },
+                                            idProducto: {
+                                                key: true,
+                                                create: false,
+                                                edit: false,
+                                                list: false
+                                            },
+                                            nombre: {
+                                                title: 'Nombre',
+                                                width: '100%',
+                                            },
+                                        }
+                                    }, function (data) { //opened handler
+                                        data.childTable.jtable('load');
+                                    });
+                        });
+                        //Return image to show on the person row
+                        return $img;
+                    }
+                },
+                nombre: {
+                    title: 'Nombre',
+                    width: '15%'
+                },
+                direccion: {
+                    title: 'Dirección',
+                    width: '20%',
+                },
+                barrio: {
+                    title: 'Barrio',
+                    width: '10%'
+                },
+                horario: {
+                    title: 'Horario',
+                    width: '10%'
+                },
+                comuna: {
+                    title: 'Comuna',
+                    width: '10%'
+                },
+                circuitoId: {
+                    title: 'Circuito',
+                    width: '10%',
+                    list: false,
+                    options: '/Circuitos/Lista',
+                    create: true,
+                    edit: true,
+                },
+                circuito: {
+                    title: 'Circuito',
+                    width: '10%',
+                    create: false,
+                    edit: false,
+                },
+                activo: {
+                    title: 'Activo',
+                    width: '10%',
+                    create: false,
+                    edit: false,
+                    options: [{ Value: true, DisplayText: 'Si!' }, { Value: false, DisplayText: 'No' }]
+
+                },
+                desactivar: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    display: function (data) {
+                        var $img = $('<img data-idlocal=' + data.record.idLocal + ' class="desactivar" style="cursor:pointer" src="/Imagenes/Fijas/disabled.png" title="Activar" />');
+                        return $img;
+                    }
+
+                }
+            },
+            recordDeleted: function (e, data) {
+                tabla.jtable('load');
+            }
+        });
+        tabla.jtable('load');
+
+        $(document).on("click", ".desactivar", function (e) {
+
+            $("#dialog-confirm").dialog({
+                resizable: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                buttons: {
+                    "Aceptar": function () {
+                        $(this).dialog("close");
+                        $.post("/Locales/Desactivar", { idLocal: $(e.toElement).data("idlocal") }, function () {
+                            tabla.jtable('reload');
+                        })
+                    },
+                    "Cancelar": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+        });
+
+        function mostrarProductos(id) {
+            $.blockUI({ message: null });
+            $("#dialog").empty();
+            $.post("/Productos/Lista", { todos: false, jtSorting: "nombre ASC", idLocal : id }, function (data) {
+
+
+                $.each(data.Records, function (i, val) {
+                    $("#dialog").append("<label><input type='checkbox' value='" + val.idProducto + "' " + (val.selected == true ? "selected" : "")  +">" + val.nombre + " - " + val.cantidad + (val.marca != null ? "\n" + val.marca : "") + "</label><br/>")
+
+                });
+
+                $.unblockUI();
+                $("#dialog").dialog({
+                    minWidth: 500,
+                    buttons: {
+                        "Cancelar": function () {
+                            $(this).dialog("close");
+                        },
+                        "Asignar": function () {
+                            var ids = [];
+                            $.each($("#dialog").find("input[type='checkbox']:checked"), function (i, cal) {
+                                var id = $(cal).val();
+                                ids.push(id)
+                            });
+
+                            $.ajax({
+                                type: "POST",
+                                url: "/ProductosLocal/Asignar",
+                                data: { idLocal: id, ids: ids },
+                                traditional: true,
+                                success: function (data) {
+                                    if (data.bien == true) {
+                                        $("#dialog").dialog("close");
+                                        location.reload();
+                                    }
+                                    else {
+                                        alert("Ocurrio un error");
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+                });
+            })
+
+
+
+        }
+
+        function mostrarLocales(id) {
+            $.blockUI({ message: null });
+            $("#dialog").empty();
+            $.post("/Locales/Lista", function (data) {
+
+
+                $.each(data.Records, function (i, val) {
+                    $("#dialog").append("<label><input type='checkbox' value='" + val.idLocal + "' " + (val.selected == true ? "selected" : "") + "> " + val.direccion + "</label><br/>")
+
+                });
+
+                $.unblockUI();
+                $("#dialog").dialog({
+                    minWidth: 500,
+                    buttons: {
+                        "Cancelar": function () {
+                            $(this).dialog("close");
+                        },
+                        "Asignar": function () {
+                            var ids = [];
+                            $.each($("#dialog").find("input[type='checkbox']:checked"), function (i, cal) {
+                                var id = $(cal).val();
+                                ids.push(id)
+                            });
+
+                            $.ajax({
+                                type: "POST",
+                                url: "/ProductosLocal/Replicar",
+                                data: { idLocalc: id, ids: ids },
+                                traditional: true,
+                                success: function (data) {
+                                    if (data.bien == true) {
+                                        $("#dialog").dialog("close");
+                                        location.reload();
+                                    }
+                                    else {
+                                        alert("Ocurrio un error");
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+                });
+            })
+
+
+
+        }
+
+    </script>
+}

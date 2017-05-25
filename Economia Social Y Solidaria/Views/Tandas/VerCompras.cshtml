@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "VerCompras";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+
+
+<div class="container-fluid" style="margin-top:70px">
+    <h2>Ver Compras</h2>
+    <div id="Tabla"></div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        var admin = '@ViewBag.Admin';
+
+        $("a[href='/Tandas/VerCompras']").closest("li").addClass("active");
+
+        var tabla = $('#Tabla').jtable({
+            title: 'Compras por tanda',
+            sorting: true, //Enable sorting
+            defaultSorting: 'idCompra ASC',
+            actions: {
+                listAction: '/Tandas/ListaCompras?ad=' + admin,
+            },
+            fields: {
+                idCompra: {
+                    key: true,
+                    list: false
+                },
+                vecine: {
+                    title: 'Vecino',
+                    width: '20%'
+                },
+                productos: {
+                    title: 'Productos',
+                    width: '60%'
+                },
+                local: {
+                    title: 'Local',
+                    width: '10%'
+                },
+                fecha: {
+                    title: 'Fecha',
+                    width: '10%'
+                }
+            }
+        });
+        tabla.jtable('load');
+
+    </script>
+}

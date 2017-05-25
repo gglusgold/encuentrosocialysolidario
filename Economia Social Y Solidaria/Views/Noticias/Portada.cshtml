@@ -1,0 +1,129 @@
+﻿@model List<Economia_Social_Y_Solidaria.Models.Noticias>
+@{
+    ViewBag.Title = "Portada";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+
+<style>
+    .ui-dialog {
+        width: 350px!important;
+    }
+</style>
+
+<div class="container-fluid noticiascon" style="margin-top:100px">
+
+</div>
+
+
+<div id="noticia" style="display:none">
+    <div class="card">
+        <div class="row">
+            <img class="slide-image imagen" alt="">
+        </div>
+        <div class="container col-md-12">
+            <div class="row">
+                <div class="col-md-9">
+                    <h3><b class="titulo"></b></h3>
+                </div>
+                <div class="col-md-3" style="text-align:right; vertical-align:middle">
+                    <h6><b class="fecha"></b></h6>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="copete"></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 autordiv" style="display:none">
+                    <h5>Autor: <b class="autor"></b></h5>
+                </div>
+                <div class="col-md-6 pull-right">
+                    <h5 class="pull-right"><a class="link" href="#" target="_blank"> Leer nota completa</a></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        var mostrar = '@ViewBag.mostrar';
+        if (mostrar == "True"){
+            alert("No te das una idea lo que te extraño!<br/><img src='http://economiasocial.somee.com/Imagenes/Fijas/tami.png'/>", "Tamiiii!");
+        }
+
+        var noticias = @Html.Raw(Json.Encode(Model));
+        cargarDatos(noticias);
+
+        function cargarDatos(not){
+            var container = $(".noticiascon");
+            container.empty();
+
+            var actual = 0;
+            while ( actual < not.length )
+            {
+                var row = $("<div/>");
+                row.addClass("row")
+                for ( var col = 0; col < 2 && actual < not.length ; col++){
+                    agregarNoticia(col, not[actual]).appendTo(row);
+                    actual++;
+                }
+                row.appendTo(container);
+            }
+        }
+
+        function agregarNoticia(col, noticia){
+            //imagen local fecha estado
+            console.log(noticia);
+            var nueva = $("#noticia").clone();
+            nueva.addClass("col-md-5");
+            if (col == 0)
+                nueva.addClass("col-md-offset-1");
+
+            nueva.find(".card").attr("data-idnoticia", noticia.idNoticia);
+            nueva.find(".imagen").attr('src', noticia.imagen);
+            nueva.find(".titulo").text(noticia.titulo);
+            nueva.find(".fecha").text(new Date(+noticia.fecha.replace(/\D/g, '')).toLocaleDateString());
+            nueva.find(".copete").text(noticia.copete);
+
+            if ( noticia.autor != null ){
+                nueva.find(".autordiv").show();
+                nueva.find(".autor").text(noticia.autor);
+            }
+
+            nueva.find(".link").attr("href", noticia.link);
+
+            if ( noticia.link == null )
+                nueva.find(".link").hide();
+
+            /*if (comprado.editar )
+                nueva.find(".btneditar").show();
+            if (comprado.comentar )
+                nueva.find(".btncomentar").show();
+            if (comprado.comentado )
+                nueva.find(".btnrepetir").show();
+
+
+            nueva.removeAttr('id');
+
+            var precioTotal = 0;
+            $.each(comprado.productos, function(i,val){
+                precioTotal += (val.precioUnidad * val.cantidad);
+                nueva.find(".productos").append("<tr data-idproducto='" + comprado.productos.idProducto + "'><td>" + val.nombre+ "</td><td>" +val.cantidad+ "</td><td>$" +val.precioUnidad+ "</td></tr>");
+            });
+            nueva.find(".productos").append("<tr><td></td><td  style='text-align:right;' colspan=2 ><b>Total: $" + precioTotal+ "</b></td></tr>");*/
+            nueva.show();
+
+            return nueva;
+        }
+
+        function returnObj(arr,r){
+            return $.grep(arr, function(elem,index){
+                return elem ? elem.idCompra == r : false;
+            })[0];
+        }
+
+
+    </script>
+}

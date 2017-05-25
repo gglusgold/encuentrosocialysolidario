@@ -1,0 +1,82 @@
+﻿/*!
+ * Start Bootstrap - Shop Homepage (http://startbootstrap.com/)
+ * Copyright 2013-2016 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
+ */
+
+body {
+    padding-top: 70px;
+}
+
+.thumbnail img {
+    width: auto;
+    max-height: 200px;
+}
+
+.thumbnail {
+    margin-left: 5px;
+    margin-right: 5px;
+    border: 0;
+    padding: 0;
+}
+
+footer {
+    margin: 50px 0;
+}
+
+.dropdown-menu {
+    position: unset;
+}
+
+
+button.cerrar {
+    -webkit-appearance: none;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+}
+
+.cerrar {
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2;
+    padding-right: 10px !important;
+}
+
+.modal_log {
+    padding-top: 30px;
+}
+
+.pocopadding {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+    /* On mouse-over, add a deeper shadow */
+    .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+.pedido {
+    margin-bottom: 15px;
+    margin-top: 15px;
+    width: 100%;
+}
+
+
+.espacio {
+    padding: 2px 25px;
+}

@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "Categorias";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+
+<style>
+    td:last-child {
+        text-align: center;
+    }
+
+    .ui-dialog {
+        z-index: 9999;
+    }
+
+    .jtable-busqueda {
+        color: #000000;
+    }
+</style>
+
+<div class="container-fluid" style="margin-top:70px">
+    <h2>Categorias</h2>
+    <div id="Tabla"></div>
+</div>
+
+
+
+@section scripts{
+    <script type="text/javascript">
+
+        $("a[href='/Categorias/Categorias']").closest("li").addClass("active");
+
+        var tabla = $('#Tabla').jtable({
+            title: 'Listado de Categorias',
+            buscar: true,
+            prefijo: "id",
+            paging: true,
+            sorting: true,
+            pageSizes: [10, 25, 50, 100, 250, 500, "Todo"],
+            actions: {
+                listAction: '/Categorias/ListaCategorias',
+                createAction: '/Categorias/Crear',
+                updateAction: '/Categorias/Editar',
+                deleteAction: '/Categorias/Borrar',
+            },
+            fields: {
+                idCategoria: {
+                    key: true,
+                    list: false
+                },
+                Productos: {
+                    title: 'Productos',
+                    width: '5%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    display: function (productosData) {
+
+                        var $img = $('<img style="cursor:pointer" src="/Imagenes/Fijas/box64.png" title="Ver Productos" />');
+                        $img.click(function () {
+                            var abierto = tabla.jtable('isChildRowOpen', $img.closest('tr'));
+                            if (!abierto) {
+                                tabla.jtable('openChildTable',
+                                    $img.closest('tr'),
+                                    {
+                                        title: productosData.record.nombre + ' - Lista Productos',
+                                        actions: {
+                                            listAction: '/Categorias/ListaProductos?idCategoria=' + productosData.record.idCategoria,
+                                            //deleteAction: '/ProductosLocal/Sacar'
+                                        },
+                                        toolbar: {
+                                            //hoverAnimation: true, //Enable/disable small animation on mouse hover to a toolbar item.
+                                            //hoverAnimationDuration: 60, //Duration of the hover animation.
+                                            //hoverAnimationEasing: undefined, //Easing of the hover animation. Uses jQuery's default animation ('swing') if set to undefined.
+                                            //items: [{
+                                            //    icon: '/Css/metro/add.png',
+                                            //    text: 'Asignar productos',
+                                            //    click: function () {
+                                            //        //mostrarProductos(localesData.record.idLocal);
+                                            //    }
+                                            //},
+                                            //{
+                                            //    icon: '/Css/metro/add.png',
+                                            //    text: 'Replicar a local',
+                                            //    click: function () {
+                                            //        //mostrarLocales(localesData.record.idLocal);
+                                            //    }
+                                            //}]
+                                        },
+                                        fields: {
+                                            localId: {
+                                                type: 'hidden',
+                                                defaultValue: productosData.record.idCategoria
+                                            },
+                                            idProducto: {
+                                                key: true,
+                                                create: false,
+                                                edit: false,
+                                                list: false
+                                            },
+                                            nombre: {
+                                                title: 'Nombre',
+                                                width: '100%',
+                                            },
+                                        }
+                                    }, function (data) { //opened handler
+                                        data.childTable.jtable('load');
+                                    });
+                            }
+                            else
+                            {
+                                tabla.jtable('closeChildTable', $img.closest('tr'));
+                            }
+                        });
+                        //Return image to show on the person row
+                        return $img;
+                    }
+                },
+                nombre: {
+                    title: 'Categoria',
+                    width: "95%",
+                    inputClass: 'validate[required]'
+                }
+            },
+            formCreated: function (event, data) {
+                data.form.validationEngine({ promptPosition: "topLeft", scroll: false });
+            },
+            formSubmitting: function (event, data) {
+                return data.form.validationEngine('validate');
+            },
+            formClosed: function (event, data) {
+                data.form.validationEngine('hide');
+                data.form.validationEngine('detach');
+            }
+        });
+        tabla.jtable('load');
+
+
+
+    </script>
+}

@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "Comentarios";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+
+
+<style>
+    td:last-child {
+        text-align: center;
+    }
+
+    .ui-dialog {
+        z-index: 9999;
+    }
+
+    .jtable-busqueda {
+        color: #000000;
+    }
+</style>
+
+<div class="container-fluid" style="margin-top:70px">
+    <h2>Comentarios</h2>
+    <div id="Tabla"></div>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript">
+
+        $("a[href='/Categorias/Categorias']").closest("li").addClass("active");
+
+        var tabla = $('#Tabla').jtable({
+            title: 'Listado de Comentarios',
+            buscar: true,
+            prefijo: "id",
+            paging: true,
+            sorting: true,
+            pageSizes: [10, 25, 50, 100, 250, 500, "Todo"],
+            actions: {
+                listAction: '/Comentarios/Lista'
+            },
+            fields: {
+                idProductoComentario: {
+                    key: true,
+                    list: false
+                },
+                local: {
+                    title: 'Local',
+                },
+                comuna: {
+                    title: 'Comuna',
+                },
+                vecinx: {
+                    title: 'Vecinx',
+                },
+                producto: {
+                    title: 'Producto',
+                },
+                comentario: {
+                    title: 'Comentario',
+                },
+                estrellas: {
+                    title: 'Estrellas',
+                },
+                fecha: {
+                    title: 'Fecha',
+                    type: "date",
+                    displayFormat: "dd/MM/yyyy"
+                },
+                visible: {
+                    title: 'Aceptado',
+                    width: "5%",
+                    display: function (data) {
+
+                        var imagen = data.record.visible ? "si" : "no";
+
+                        var $a = $("<img src='/Imagenes/Fijas/" + imagen + ".png' style='cursor:pointer'/>");
+                        $a.click(function () {
+                            var img = $(this);
+                            $.post("/Comentarios/Cambiar", { idProductoComentario: data.record.idProductoComentario }, function (visible) {
+                                var nueba = visible ? "si" : "no";
+                                $a.attr("src", "/Imagenes/Fijas/" + nueba + ".png")
+                            });
+                        });
+
+                        return $a;
+                    },
+
+                }
+            }
+        });
+        tabla.jtable('load');
+
+
+
+    </script>
+}

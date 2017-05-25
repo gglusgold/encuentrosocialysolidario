@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Prueba";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+
+
+<div class="container">
+    <p>Prueba Aportes</p>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline" id="aporte">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Cuando querés aportar?</label>
+                    <input type="number" class="form-control" id="exampleInputEmail1" placeholder="">
+                </div>
+                <button data-loading-text="<i class='fa fa-spinner fa-spin '></i> Espere" type="submit" id="siguiente" class="btn btn-primary">Siguiente</button>
+                <a target="_blank" disabled id="finalizar" class="btn btn-primary">Aportar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $("#aporte").submit(function (e) {
+            e.preventDefault();
+            $("#siguiente").button("loading");
+            $.post("/Prueba/GenerarLink", { cantidad: $("#exampleInputEmail1").val() }, function (devuelta) {
+                $("#siguiente").button("reset");
+                if (devuelta.error == "") {
+                    $("#siguiente").attr("disabled", true);
+                    $("#finalizar").attr({ "disabled": false, "href": devuelta.link });
+                }
+
+
+            });
+
+            return false;
+        });
+    </script>
+}

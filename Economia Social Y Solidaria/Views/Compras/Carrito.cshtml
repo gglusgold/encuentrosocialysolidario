@@ -1,0 +1,639 @@
+﻿@model Economia_Social_Y_Solidaria.Controllers.ChanguitoCompleta
+@{
+    ViewBag.Title = "Carrito";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+<style>
+    .dropdown-backdrop {
+        position: static;
+    }
+
+    .ui-dialog {
+        z-index: 9999;
+    }
+</style>
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-md-3" style="margin-bottom:30px">
+            <p class="lead" id="listado_texto">Listado de compras</p>
+            <ul class="list-group" id="listado">
+                @*<li class="list-group-item"><span class="badge">14</span>Cras justo odio</li>
+                    <li class="list-group-item list-group-item-info">Cras sit amet nibh libero</li>*@
+            </ul>
+            <ul class="list-group">
+                <li class='list-group-item list-group-item-info' id="total" style="display:none">Total gastado: <span class='badge'>0</span></li>
+            </ul>
+            <button class="btn btn-primary" style="display:none" id="btn_confirmar">Confirmar Pedido</button>
+        </div>
+
+        <div class="col-md-9">
+
+            <div class="row" style="margin-bottom:20px">
+                <form class="form-inline">
+                    <div class="col-md-6">
+                        <label for="scat">Elegí una categoria:</label>
+                        <select id="scat" class="form-control input-medium">
+                            <option value="-1">Todas</option>
+                            @foreach (var categoria in Model.categorias)
+                            {
+                                <option value="@categoria.idCategoria">@categoria.nombre</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="sordenar">Ordenar Por:</label>
+                        <select id="sordenar" class="form-control input-medium">
+                            <option value="1">Nombre</option>
+                            <option value="2">Mas Vendidos</option>
+                            <option value="3">Mas Recomendados</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="row cont">
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="locales" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form id="form_confirmar" action="~/Compras/ConfirmarPedido" method="post" enctype="application/x-www-form-urlencoded">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
+                    <h4 class="modal-title">Comenzar pedido</h4>
+                </div>
+                <div class="modal-body">
+                    <h3>Para saber qué productos mostrarte, tenemos que saber dónde vas a retirar tu pedido<br />Los locales de:</h3>
+                    <div class="radio locales">
+                        @foreach (var local in Model.locales)
+                        {
+                            <label style="padding-top: 5px;padding-bottom: 5px;"><input type="radio" name="local" id="local" value="@(local.idLocal)" required>@(local.direccion) (Comuna @(local.comuna) - @(local.barrio)) - de @(local.horario).</label>
+                        }
+                    </div>
+                    <h3>Tu pedido lo tenés que retirar el sábado @(Model.proxFecha) en el horario según el local que elijas</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type='button' class='btn btn-primary' id="localaceptar">Aceptar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </form>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<div class="modal fade" id="confirmarCompra" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form id="form_confirmar" action="~/Compras/ConfirmarPedido" method="post" enctype="application/x-www-form-urlencoded">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Terminar Pedido</h4>
+                </div>
+                <div class="modal-body" id="parte_uno" style="display:block">
+                    <table class="table" id="tabla_listado">
+                        <caption>Listado de compras.</caption>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <div class="row">
+                            @*<div class="col-sm-4">
+                                    <button type="button" data-loading-text="Espere..." id="btn_anterior_compra" class="form-control btn btn-primary" style="display: none">Anterior</button>
+                                </div>*@
+                            <div class="col-sm-4">
+                                <button type="button" data-loading-text="Espere..." class="form-control btn btn-default" data-dismiss="modal">Cancelar</button>
+                            </div>
+                            @*<div class="col-sm-4">
+                                    <button type="button" id="btn_siguiente_compra" class="form-control btn btn-primary">Siguiente</button>
+                                </div>*@
+                            <div class="col-sm-4">
+                                <button type="submit" id="confirmada" data-loading-text="Espere..." class="form-control btn btn-success">Terminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </form>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="producto" class="col-md-4 arriba" style="display:none">
+    <div class="card">
+        <div class="row">
+            <div class="thumbnail" style="margin-bottom:0"><img class="imagen" alt=""></div>
+        </div>
+        <div class="row espacio">
+            <div class="col-md-9 pocopadding">
+                <h4 class="pnombre"></h4>
+            </div>
+            <div class="col-md-3 pocopadding">
+                <h4 class="pull-right pprecio"></h4>
+            </div>
+        </div>
+        <div class="row espacio" style="text-align:justify">
+            <div class="col-md-12 pocopadding">
+                <p class="pdesc"></p>
+            </div>
+        </div>
+        <div class="row espacio">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="btn-group pedido">
+                    <button type="button" class="btn btn-primary reservar">Reservar <span class="badge">1</span></button>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="cantidad">1</a></li>
+                        <li><a class="cantidad">2</a></li>
+                        <li><a class="cantidad">3</a></li>
+                        <li><a class="cantidad">4</a></li>
+                        <li><a class="cantidad">5</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row espacio">
+            <div class="col-md-5 pocopadding">
+                <p class="pcomentarios" style="margin-top: 5PX;">0 comentarios</p>
+            </div>
+            <div class="col-md-7 pocopadding">
+                <input type="number" class="pestrellas" value="" min=0 max=5 step=1 data-size="xxs" disabled="true" data-show-caption="false" data-show-clear="false">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript">
+
+        var productos = @Html.Raw(Json.Encode(Model.changuito));
+        cargarDatos(productos);
+
+
+        $("#scat").val(@ViewBag.categoria);
+        $("#scat").change(function(e){
+            $.blockUI({ message: null });
+            $.post("/Compras/cambioCategoria", {idCategoria:$(this).val(), idLocal: Cookies.get('idLocal'), ordenar:$("#sordenar").val()}, function(e){
+                $.unblockUI();
+                productos = e.lista;
+                cargarDatos(e.lista);
+            }).fail(function(xhr, status, error) {
+                $.unblockUI();
+                alert("Ocurrio un error");
+            });;
+        });
+
+        $("#sordenar").val(@ViewBag.ordenar);
+        $("#sordenar").change(function(e){
+            $.blockUI({ message: null });
+            $.post("/Compras/cambioCategoria", {idCategoria:$("#scat").val(), idLocal: Cookies.get('idLocal'), ordenar:$(this).val()}, function(e){
+                $.unblockUI();
+                productos = e.lista;
+                cargarDatos(e.lista);
+            }).fail(function(xhr, status, error) {
+                $.unblockUI();
+                alert("Ocurrio un error");
+            });;
+        });
+
+
+
+
+        var editarCompra = Cookies.getJSON('editar');
+        if ( editarCompra == undefined )
+            editarCompra = null;
+
+        var checkTanda = @Model.locales.Count;
+        var cerrado = checkTanda == 0;
+        if ( checkTanda == 0 && editarCompra == null ){
+            Cookies.remove("listado");
+
+            $.toast({
+                heading: 'Reservas cerradas',
+                text: 'No se encuentra abierto el formulario para pedidos',
+                position : 'top-right' ,
+                hideAfter : false,
+                icon: 'warning',
+                loader: false,
+            })
+
+            $(".pedido").hide();
+        }
+        else{
+            $("#locales").modal({
+                backdrop: 'static',
+                keyboard: false
+            })
+
+            $("#locales").modal('show');
+        }
+
+        var totalCompras = @Model.totalCompraTandaUsuario;
+        if ( totalCompras > 0 && editarCompra == null ){
+
+            $.toast({
+                heading: 'Información',
+                text: "Ya realizaste una compra! Haciendo <a href='/Compras/Historial'>click acá</a>, la podés modificar.",
+                position : 'top-right' ,
+                icon: 'info',
+                loader: false,
+                hideAfter: 10000
+            })
+        }
+
+        if ( editarCompra != null ){
+            $.toast({
+                heading: 'Información',
+                text: "Se encuentra editando un pedido<br/>Cuando se vaya de la página, si no lo confirma, no se realizaran cambios",
+                icon: 'info',
+                position : 'top-right' ,
+                loader: false,
+                hideAfter: null,
+            })
+        }
+
+        var cookieProd = Cookies.getJSON('listado');
+        if (cookieProd != undefined) {
+            $.each(cookieProd, function (i, val) {
+                agregarItem(val.id, val.precio, val.nombre, val.cantidad, false);
+            });
+            calcularTotal();
+        }
+
+        if (editarCompra != null) {
+            $.each(editarCompra.productos, function (i, val) {
+                agregarItem(val.id, val.precio, val.nombre, val.cantidad, false);
+            });
+            calcularTotal();
+        }
+
+        $("a[href='/Compras/Carrito']").closest("li").addClass("active");
+
+        $(document).on('click', '.cantidad', function (e) {
+            e.preventDefault();
+            var cantidad = $(this).text();
+            $(this).closest('div').find(".badge").text(cantidad);
+        });
+
+        $(document).on('click', '.cerrar', function (e) {
+            e.preventDefault();
+            var item = $(this).closest(".itemp");
+            var cantidad = parseInt(item.find(".badge").text());
+            if (cantidad == 1)
+                item.remove();
+            else {
+                cantidad = cantidad - 1;
+                item.find(".badge").text(cantidad);
+            }
+            calcularTotal();
+        });
+
+        $(document).on('click', ".reservar", function (e) {
+            var btn = $(this);
+
+            var id = btn.closest(".arriba").data('idproducto');
+            var producto = returnObj(productos, id);
+            var cantidad = parseInt(btn.find('.badge').text());
+
+            agregarItem(id, producto.precio, producto.nombre, cantidad, true);
+            calcularTotal();
+
+        });
+
+        $("#btn_confirmar").click(function (e) {
+            e.preventDefault();
+
+            $.post("/Inicio/Logueado", function (vuelta) {
+                if (vuelta.logueado == true)
+                    $("#confirmarCompra").modal('show');
+                else
+                    alert("Hay que iniciar sesión para realizar un pedido", "Frente de Economia Social y Solidaria - Nuevo Encuentro");
+            });
+        });
+
+        $("#confirmarCompra").on('show.bs.modal', function () {
+
+            //Cookies.remove('productos');
+
+            var items = $("#listado").find(".itemp");
+
+            $("#tabla_listado tbody").empty();
+            $("#tabla_listado tfoot").empty();
+            $.each(items, function (i, val) {
+                var item = $(val);
+                var idProd = item.data("idprod");
+                var precio = parseFloat(item.data("precio"));
+                var cantidad = parseFloat(item.find(".badge").text());
+                var prodcuto = item.contents().filter(function () {
+                    return this.nodeType == 3;
+                }).text();
+
+                $("#tabla_listado tbody").append("<tr><th>" + (i + 1) + "</th><td>" + prodcuto + "</td><td>" + cantidad + "</td></tr>");
+            });
+
+            var total = $("#total").find("span").text();
+            $("#tabla_listado tfoot").append("<tr><th style='text-align: right;'  colspan='3'>Total gastado: " + total + "</th></tr>");
+
+        });
+
+        $('#btn_anterior_compra').click(function (e) {
+            $("#btn_anterior_compra").hide();
+            $("#btn_siguiente_compra").show();
+            //$("#confirmada").hide();
+
+            //$("#parte_dos").hide();
+            $("#parte_uno").show();
+            e.preventDefault();
+        });
+
+        $('#btn_siguiente_compra').click(function (e) {
+            $("#btn_anterior_compra").show();
+            $("#btn_siguiente_compra").hide();
+            //$("#confirmada").show();
+
+            // $("#parte_dos").show();
+            $("#parte_uno").hide();
+            e.preventDefault();
+
+            if ( editarCompra != null ){
+                $(".locales").find('input[value=' + editarCompra.idLocal + ']').attr('checked', 'checked');
+            }
+        });
+
+        $("#confirmarCompra").on('hidden.bs.modal', function () {
+            $("#parte_uno").show();
+            $("#parte_dos").hide();
+            $("#btn_anterior_compra").hide();
+            //$("#confirmada").hide();
+            $("#btn_siguiente_compra").show();
+
+        });
+
+        $("#locales").on('show.bs.modal', function () {
+            $(this).find(".locales input:checked").prop('checked', false);
+
+        });
+
+        $("#localaceptar").on('click', function () {
+            if ($("#locales input:checked").length > 0 )
+            {
+                var idLocal = $("#locales .locales input:checked").val();
+                Cookies.set('idLocal', idLocal);
+
+                $.post("/Compras/cambioCategoria", {idCategoria:$("#scat").val(), idLocal: idLocal}, function(e){
+                    $.unblockUI();
+                    productos = e.lista;
+                    cargarDatos(e.lista);
+                    $("#locales").modal("hide");
+                }).fail(function(xhr, status, error) {
+                    $.unblockUI();
+                    alert("Ocurrio un error");
+                });;
+            }
+            else{
+                alert("Hay q seleccionar un local");
+            }
+
+        });
+
+        $(document).on("submit", "#form_confirmar", function(e){
+            $("#form_confirmar .modal-footer").find("button").button('loading');
+            var listadoo = Cookies.getJSON('listado');
+            var idCompra = null;
+            if ( editarCompra != null ){
+                listadoo = editarCompra.productos;
+                idCompra = editarCompra.idCompra;
+            }
+
+            var local = $(this).find("input[name=local]:checked").val();
+            var cantidad = [];
+            var id = [];
+
+            $.each(listadoo, function (i, val) {
+                id.push(val.id);
+                cantidad.push(val.cantidad);
+            });
+
+            var data = { local:Cookies.get('idLocal'), idCompra: idCompra, cantidad: cantidad, idProducto: id };
+
+            $.ajax({
+                type: "POST",
+                url: "/Compras/ConfirmarPedido",
+                data: data,
+                dataType: "json",
+                traditional: true,
+                success: function(response){
+
+                    console.log(response.error == null );
+                    if ( response.error == null ){
+                        alert("Su pedido ha sido confirmado!", "Gracias!", function(){
+                            if ( editarCompra != null )
+                                Cookies.remove("editar");
+
+                            Cookies.remove("listado");
+                            location.href = "/Compras/Historial";
+                        });
+                    }
+                    else
+                    {
+                        $("#form_confirmar .modal-footer").find("button").button('reset');
+                        alert(response.error);
+                    }
+                }
+            });
+
+            return false;
+        });
+
+        $(document).on("click", ".detalle",function(i){
+            $.redirectPost("/Compras/Detalle", { id:$(i.target).closest(".arriba").data("idproducto")})
+        });
+
+
+        function cargarDatos(productos){
+            var container = $(".cont");
+            container.empty();
+
+            var actual = 0;
+            while ( actual < productos.length )
+            {
+                var row = $("<div/>");
+                row.addClass("row");
+                row.css({"margin-bottom":"10px"})
+                for ( var col = 0; col < 3 && actual < productos.length ; col++){
+                    agregarProducto(col, productos[actual]).appendTo(row);
+                    actual++;
+                }
+                row.appendTo(container);
+            }
+        }
+
+        function agregarProducto(col, producto){
+            //imagen local fecha estado
+            var nueva = $("#producto").clone();
+            nueva.attr({"data-idproducto":producto.idProducto});
+            nueva.attr({"data-stock":producto.stock});
+
+            var nombre = "/Imagenes/Producto-" + producto.idProducto + ".jpg";
+            /*if (!imageExists(nombre))
+                nombre = "/Imagenes/Fijas/pp.jpeg";*/
+
+            nueva.find(".imagen").attr('src',nombre).attr("onerror", "this.src='/Imagenes/Fijas/pp.jpeg';");
+
+            var prodNombre = producto.nombre;
+            if ( prodNombre.indexOf("\n") > -1)
+                prodNombre = prodNombre.replace(new RegExp("\n", 'g'), "<br/>");
+
+            nueva.find(".pnombre").append($("<a/>").attr("href","#").html(prodNombre)).addClass("detalle");
+            nueva.find(".pprecio").text("$" + producto.precio);
+
+            var vermas = $("<a/>").attr({"href":"#"}).text("Ver más").addClass("detalle");
+
+            var max = 125;
+            if ( producto.descripcion.length > max ){
+                nueva.find(".pdesc").html(producto.descripcion.substring(0,max).replace(new RegExp("\n", 'g'), "<br/>") + "... ");
+                nueva.find(".pdesc").append(vermas);
+            }
+            else
+                nueva.find(".pdesc").html(producto.descripcion.replace(new RegExp("\n", 'g'), "<br/>"));
+
+            nueva.find(".pcomentarios").text(producto.comentarios + " Comentarios");
+            nueva.find(".pestrellas").rating('update', producto.rating);
+            nueva.attr("data-idproducto", producto.idProducto);
+
+            nueva.removeAttr('id');
+            nueva.show();
+            return nueva;
+        }
+
+        var toastAgregar;
+        function agregarItem(id, precio, nombre, cantidad, mostrar) {
+            nombre = nombre + " - $" + precio;
+            var listado = $("#listado");
+            var check = listado.find("li[data-idprod='" + id + "']")
+            var cantMostrar = 0;
+            if (check.length == 0) {
+                var item = "<li class='list-group-item itemp' data-idprod='" + id + "' data-precio='" + precio + "'><button type='button' class='cerrar' ><span aria-hidden='true'>&times;</span></button><span class='badge'>" + cantidad + "</span>" + nombre + "</li>";
+                listado.append(item);
+                cantMostrar = cantidad;
+            }
+            else {
+                var pedida = parseInt(check.find(".badge").text());
+                check.find(".badge").text(pedida + cantidad);
+                cantMostrar = (pedida + cantidad);
+            }
+
+            if (mostrar){
+                if (toastAgregar == undefined)
+                    var toastAgregar  = $.toast({
+                        heading: 'Reserva agregada!',
+                        text: "Se añadio " + cantidad + " " + nombre + " a tu pedido",
+                        icon: 'success',
+                        position : 'top-right' ,
+                        stack: false,
+                        loader:false
+
+                    })
+                else
+                    toastAgregar.update({
+                        eading: 'Reserva agregada!',
+                        text: "Se añadio " + cantidad + " " + nombre + " a tu pedido",
+                        icon: 'success',
+                        position : 'top-right' ,
+                        stack: false,
+                        loader:false
+                    });
+            }
+        }
+
+        function calcularTotal() {
+
+            var productos = [];
+
+            var items = $("#listado").find(".itemp");
+            var totalcuenta = 0;
+            $.each(items, function (i, val) {
+                var item = $(val);
+                var id = parseFloat(item.data("idprod"));
+                var precio = parseFloat(item.data("precio"));
+                var cantido = parseFloat(item.find(".badge").text());
+                var totalItem = precio * cantido;
+                var prodcuto = item.contents().filter(function () {
+                    return this.nodeType == 3;
+                }).text();
+
+                totalcuenta += totalItem;
+
+                prod = {}
+                prod["id"] = id;
+                prod["nombre"] = prodcuto;
+                prod["precio"] = precio;
+                prod["cantidad"] = cantido;
+                productos.push(prod);
+            });
+
+            if (items.length > 0) {
+                $("#total").find('.badge').text("$" + totalcuenta);
+                $("#total").show();
+                $("#btn_confirmar").show();
+            }
+            else {
+                $("#total").hide('slow');
+                $("#btn_confirmar").hide('slow');
+            }
+
+            if ( editarCompra == null)
+                Cookies.set('listado', productos, { path: '/' });
+            else{
+                editarCompra.productos = productos;
+                Cookies.set('editar', editarCompra, { path: '/' });
+            }
+
+        }
+
+        function returnObj(arr,r){
+            return $.grep(arr, function(elem,index){
+                return elem ? elem.idProducto == r : false;
+            })[0];
+        }
+
+        String.prototype.replaceAll = function(search, replacement) {
+            var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+        };
+
+        $(window).unload(function(){
+            Cookies.remove("editar");
+        });
+
+    </script>
+}

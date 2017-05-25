@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Cargar";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+
+<div class="container-fluid" style="margin-top:70px">
+    <h2>Noticias</h2>
+    <div id="Tabla"></div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        $("a[href='/Noticias/Cargar']").closest("li").addClass("active");
+
+        var tabla = $('#Tabla').jtable({
+            title: 'Listado de noticias',
+            actions: {
+                listAction: '/Noticias/Lista',
+                createAction: '/Noticias/Crear',
+                deleteAction: '/Noticias/Borrar',
+                updateAction: '/Noticias/Editar'
+            },
+            fields: {
+                idNoticia: {
+                    key: true,
+                    list: false
+                },
+                titulo: {
+                    title: 'Titulo',
+                    width: '15%'
+                },
+                copete: {
+                    title: 'Contenido (Max 300 caracteres)',
+                    width: '25%',
+                    type: 'textarea'
+                },
+                imagen: {
+                    title: 'Imagen (Link)',
+                    width: '10%'
+                },
+                link: {
+                    title: 'Link Noticia',
+                    width: '10%'
+                },
+                categoria: {
+                    title: 'Categoria (Puede estar vacio)',
+                    width: '10%'
+                },
+                tags: {
+                    title: 'Tags (Puede estar vacio)',
+                    width: '10%'
+                },
+                autor: {
+                    title: 'Autor',
+                    width: '10%'
+                },
+                fecha: {
+                    title: 'Fecha',
+                    width: '10%',
+                    type: 'date'
+                }
+            }
+        });
+        tabla.jtable('load');
+
+    </script>
+}

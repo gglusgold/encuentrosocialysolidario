@@ -1,0 +1,497 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{66ABA2B8-3DB6-4856-B4B7-955B8A53E492}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Economia_Social_Y_Solidaria</RootNamespace>
+    <AssemblyName>Economia_Social_Y_Solidaria</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Desktop\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SpreadsheetLight">
+      <HintPath>..\..\..\SpreadsheetLight.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\ApiProductosController.cs" />
+    <Compile Include="Controllers\CircuitosController.cs" />
+    <Compile Include="Controllers\ComentariosController.cs" />
+    <Compile Include="Controllers\LocalesController.cs" />
+    <Compile Include="Controllers\CategoriasController.cs" />
+    <Compile Include="Controllers\EstadisticasController.cs" />
+    <Compile Include="Controllers\NoticiasController.cs" />
+    <Compile Include="Controllers\ProductosLocalController.cs" />
+    <Compile Include="Controllers\PruebaController.cs" />
+    <Compile Include="Controllers\RelevamientosController.cs" />
+    <Compile Include="Controllers\TandasController.cs" />
+    <Compile Include="Controllers\ComprasController.cs" />
+    <Compile Include="Controllers\InicioController.cs" />
+    <Compile Include="Controllers\ProductosController.cs" />
+    <Content Include="Css\bootstrap-switch.css" />
+    <Content Include="Css\chosen-sprite.png" />
+    <Content Include="Css\chosen.min.css" />
+    <Content Include="Css\estadisticas.css" />
+    <Content Include="Css\font-awesome.css" />
+    <Content Include="Css\ui\images\ui-bg_glass_75_d0e5f5_1x400.png" />
+    <Content Include="Css\ui\images\ui-bg_glass_85_dfeffc_1x400.png" />
+    <Content Include="Css\ui\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Css\ui\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
+    <Content Include="Css\ui\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
+    <Content Include="Css\ui\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+    <Content Include="Css\ui\images\ui-icons_217bc0_256x240.png" />
+    <Content Include="Css\ui\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Css\ui\images\ui-icons_469bdd_256x240.png" />
+    <Content Include="Css\ui\images\ui-icons_6da8d5_256x240.png" />
+    <Content Include="Css\ui\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Css\ui\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="Css\ui\images\ui-icons_f9bd01_256x240.png" />
+    <Content Include="Css\ui\jquery-ui.css" />
+    <Content Include="Css\ui\jquery-ui.min.css" />
+    <Content Include="Css\metro\add.png" />
+    <Content Include="Css\metro\blue\jtable.css" />
+    <Content Include="Css\metro\blue\jtable.min.css" />
+    <Content Include="Css\metro\blue\loading.gif" />
+    <Content Include="Css\metro\brown\jtable.css" />
+    <Content Include="Css\metro\brown\jtable.min.css" />
+    <Content Include="Css\metro\brown\loading.gif" />
+    <Content Include="Css\metro\close.png" />
+    <Content Include="Css\metro\column-asc.png" />
+    <Content Include="Css\metro\column-desc.png" />
+    <Content Include="Css\metro\column-sortable.png" />
+    <Content Include="Css\metro\crimson\jtable.css" />
+    <Content Include="Css\metro\crimson\jtable.min.css" />
+    <Content Include="Css\metro\crimson\loading.gif" />
+    <Content Include="Css\metro\darkgray\jtable.css" />
+    <Content Include="Css\metro\darkgray\jtable.min.css" />
+    <Content Include="Css\metro\darkgray\loading.gif" />
+    <Content Include="Css\metro\darkorange\jtable.css" />
+    <Content Include="Css\metro\darkorange\jtable.min.css" />
+    <Content Include="Css\metro\darkorange\loading.gif" />
+    <Content Include="Css\metro\delete.png" />
+    <Content Include="Css\metro\edit.png" />
+    <Content Include="Css\metro\green\jtable.css" />
+    <Content Include="Css\metro\green\jtable.min.css" />
+    <Content Include="Css\metro\green\loading.gif" />
+    <Content Include="Css\metro\jtable_metro_base.css" />
+    <Content Include="Css\metro\jtable_metro_base.min.css" />
+    <Content Include="Css\metro\lightgray\jtable.css" />
+    <Content Include="Css\metro\lightgray\jtable.min.css" />
+    <Content Include="Css\metro\lightgray\loading.gif" />
+    <Content Include="Css\metro\pink\jtable.css" />
+    <Content Include="Css\metro\pink\jtable.min.css" />
+    <Content Include="Css\metro\pink\loading.gif" />
+    <Content Include="Css\metro\purple\jtable.css" />
+    <Content Include="Css\metro\purple\jtable.min.css" />
+    <Content Include="Css\metro\purple\loading.gif" />
+    <Content Include="Css\metro\red\jtable.css" />
+    <Content Include="Css\metro\red\jtable.min.css" />
+    <Content Include="Css\metro\red\loading.gif" />
+    <Content Include="Css\noticias.css" />
+    <Content Include="Css\rating.css" />
+    <Compile Include="Controllers\VecinosController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Alertas.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AlertasVecinxs.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Categorias.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Circuitos.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Comentarios.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ComentariosProducto.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CompraProducto.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Compras.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Costos.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EssNe.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EssNe.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EssNe.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EssNe.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EssNe.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EstadosCompra.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Locales.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Noticias.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Precios.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Productos.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProductosH.cs" />
+    <Compile Include="Models\ProductosLocales.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Relevamientos.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Roles.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RolesVecinos.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sysdiagrams.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tandas.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Vecinos.cs">
+      <DependentUpon>EssNe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Css\bootstrap.css" />
+    <Content Include="Css\historial.css" />
+    <Content Include="Css\iniciarsesion.css" />
+    <Content Include="Css\jquery.toast.min.css" />
+    <Content Include="Css\carrito.css" />
+    <Content Include="Css\detalle.css" />
+    <Content Include="Css\toastr.css" />
+    <Content Include="Css\validationEngine.jquery.css" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Imagenes\Fijas\box.png" />
+    <Content Include="Imagenes\Fijas\box64.png" />
+    <Content Include="Imagenes\Fijas\contact-form.png" />
+    <Content Include="Imagenes\Fijas\disabled.png" />
+    <Content Include="Imagenes\Fijas\edit.png" />
+    <Content Include="Imagenes\Fijas\ESS_1.jpg" />
+    <Content Include="Imagenes\Fijas\ESS_2.jpg" />
+    <Content Include="Imagenes\Fijas\ESS_3.jpg" />
+    <Content Include="Imagenes\Fijas\no.png" />
+    <Content Include="Imagenes\Fijas\pencil.png" />
+    <Content Include="Imagenes\Fijas\pp.jpeg" />
+    <Content Include="Imagenes\Fijas\rubbish.png" />
+    <Content Include="Imagenes\Fijas\si.png" />
+    <Content Include="Imagenes\Fijas\trash.png" />
+    <Content Include="Js\bootstrap-switch.js" />
+    <Content Include="Js\bootstrap-table-es-ES.js" />
+    <Content Include="Js\bootstrap-table.js" />
+    <Content Include="Js\bootstrap.js" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="Css\metro\blue\jtable.less" />
+    <Content Include="Css\metro\brown\jtable.less" />
+    <Content Include="Css\metro\crimson\jtable.less" />
+    <Content Include="Css\metro\darkgray\jtable.less" />
+    <Content Include="Css\metro\darkorange\jtable.less" />
+    <Content Include="Css\metro\green\jtable.less" />
+    <Content Include="Css\metro\jtable_metro_base.less" />
+    <Content Include="Css\metro\lightgray\jtable.less" />
+    <Content Include="Css\metro\pink\jtable.less" />
+    <Content Include="Css\metro\purple\jtable.less" />
+    <Content Include="Css\metro\red\jtable.less" />
+    <None Include="Js\comunas.json" />
+    <Content Include="Js\chosen.jquery.js" />
+    <Content Include="Js\datepicker-es.js" />
+    <Content Include="Js\drilldown.js" />
+    <Content Include="Js\highcharts.js" />
+    <Content Include="Js\highmaps.js" />
+    <Content Include="Js\jquery-2.1.3.js" />
+    <Content Include="Js\jquery-3.1.1.min.js" />
+    <Content Include="Js\jquery-3.0.0.js" />
+    <Content Include="Js\jquery-bootstrap-modal-steps.min.js" />
+    <Content Include="Js\jquery-ui.js" />
+    <Content Include="Js\jquery.blockUI.min.js" />
+    <Content Include="Js\jquery.jtable.es.js" />
+    <Content Include="Js\jquery.jtable.js" />
+    <Content Include="Js\jquery.jtable.tano.js" />
+    <Content Include="Js\jquery.toast.min.js" />
+    <Content Include="Js\jquery.validationEngine-es.js" />
+    <Content Include="Js\jquery.validationEngine.js" />
+    <Content Include="Js\js.cookie.js" />
+    <Content Include="Js\magyp.js" />
+    <Content Include="Js\map.js" />
+    <Content Include="Js\menu.js" />
+    <Content Include="Js\rating.js" />
+    <Content Include="Js\tano.js" />
+    <Content Include="Js\toastr.min.js" />
+    <Content Include="Views\Noticias\Portada.cshtml" />
+    <Content Include="Views\Noticias\Cargar.cshtml" />
+    <Content Include="Views\Prueba\Prueba.cshtml" />
+    <Content Include="Views\Productos\Asignar.cshtml" />
+    <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
+    <Content Include="Views\Categorias\Categorias.cshtml" />
+    <Content Include="Views\Comentarios\Comentarios.cshtml" />
+    <None Include="Web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Vecinos\Vecino.cshtml" />
+    <Content Include="Views\Locales\Locales.cshtml" />
+    <Content Include="Views\Tandas\VerCompras.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="Models\EssNe.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EssNe.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Models\EssNe.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EssNe.edmx</DependentUpon>
+      <LastGenOutput>EssNe.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\EssNe.edmx.diagram">
+      <DependentUpon>EssNe.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\EssNe.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EssNe.edmx</DependentUpon>
+      <LastGenOutput>EssNe.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Compartida\_layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Inicio\IniciarSesion.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Compras\Carrito.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Inicio\ActivarCuenta.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Compartida\_inicio.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Compartida\_menu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Productos\Productos.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Compras\Detalle.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Css\bootstrap.css.map" />
+    <None Include="Properties\PublishProfiles\Escri.pubxml" />
+    <Content Include="Views\Tandas\Tandas.cshtml" />
+    <Content Include="Views\Compras\Historial.cshtml" />
+    <None Include="Properties\PublishProfiles\FTP.pubxml" />
+    <Content Include="Views\Compras\Entregar.cshtml" />
+    <Content Include="Views\Estadisticas\Estadisticas.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>56693</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:56693/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

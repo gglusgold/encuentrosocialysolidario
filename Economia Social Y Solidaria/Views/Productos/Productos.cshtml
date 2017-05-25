@@ -1,0 +1,442 @@
+﻿@{
+    ViewBag.Title = "Listado";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+
+@*<input id="BtnBuscar" type="file" name="imagen_img" accept="image/jpeg" style="position: absolute; left: 90999900px">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 style="margin-top: 0">Productos</h2>
+            </div>
+            <div class="col-md-6">
+                <form action="/Productos/Muchos" enctype="multipart/form-data" method="post">
+                        <input class="" name="archivo" type="file" />
+                        <input class="btn btn-primary" type="submit" value="Muchos" />
+                    </form>
+                <a id="AgregarNuevo" class="btn btn-primary" style="float: right;"><span class="glyphicon glyphicon-plus"></span> Nuevo Producto</a>
+            </div>
+            <div class="col-md-12">
+                <table id="tabla" class="table table-bordered bg_blanco table-hover"></table>
+                <div id="abm"></div>
+            </div>
+        </div>
+    </div>
+
+
+    @section scripts{
+        <script type="text/javascript">
+            $("a[href='/Productos/Productos']").closest("li").addClass("active");
+
+            var columnas = [
+                   {
+                       //estos son de bootstrap table
+                       field: "idProducto",
+                       valign: 'middle',
+                       visible: false,
+                       edit: true,
+                       title: "Codigo",
+                       opciones: {
+                           editar: {
+                               atributos: { readonly: true }
+                           }
+                       }
+                   },
+                   {
+                       field: "nombre",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Nombre",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "input",
+                           atributos: { input: { required: true } }
+                       }
+                   },
+                   {
+                       field: "marca",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Marca",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "input",
+                           //atributos: { input: { required: true } }
+                       }
+                   },
+                   {
+                       field: "descripcion",
+                       align: 'left',
+                       valign: 'middle',
+                       title: "Descripcion",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "multilinea",
+                           //atributos: { input: { required: true } },
+                       }
+                   },
+                   {
+                       field: "cantidad",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Cantidad",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "input",
+                           atributos: { input: { required: true } }
+                       }
+                   },
+                   {
+                       field: "imagen",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Imagen",
+                       formatter: function (val, row, i) {
+                           var nombre = "/Imagenes/Producto-" + row.idProducto + ".jpg";
+                           return '<img onerror="this.src=\'/Imagenes/Fijas/pp.jpeg\'" height="auto" width="150px" style="max-height: 200px;width: auto;max-width: 200px;" src=' + nombre + ' />';
+                       },
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "imagen",
+                           fileId: "BtnBuscar",
+                           atributos: { input: { required: true } }
+                       }
+                   },
+                   {
+                       field: "idCategoria",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Categoría",
+                       visible: false,
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "select",
+                           source: "/Categorias/Lista",
+                           atributos: { input: { required: true } }
+                       }
+                   },
+                   {
+                       field: "categoria",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Categoría",
+                       sortable: "true",
+                       create: false,
+                       edit: false,
+                   },
+                   {
+                       field: "precio",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Precio",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "input",
+                           atributos: { input: { required: true } },
+                           leyenda: "Para los decimales usar la ,"
+                       }
+                   },
+                   {
+                       field: "costo",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Costo",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           tipo: "input",
+                           atributos: { input: { required: true } },
+                           leyenda: "Para los decimales usar la ,"
+                       }
+                   },
+                   {
+                       field: "stock",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Stock",
+                       sortable: "true",
+                       create: true,
+                       edit: true,
+                       opciones: {
+                           valor: "-1",
+                           tipo: "input",
+                           atributos: { input: { required: true } },
+                           leyenda: "-1 Indica que es ilimitado"
+                       }
+                   },
+                   {
+                       field: 'editar',
+                       title: 'Editar',
+                       valign: 'middle',
+                       align: 'center',
+                       width: '5%',
+                       events: {
+                           'click .Editar': function (e, value, row, index) {
+                               abm.Magyp("Mostrar", true, row, index);
+                           }
+                       },
+                       formatter: function operateFormatter(value, row, index) {
+                           return "<a style='cursor:pointer' class='Editar' title='Editar'><i class='glyphicon glyphicon-edit'></i></a>";
+
+                       }
+                   },
+                   {
+                       field: 'borrar',
+                       title: 'Activo',
+                       valign: 'middle',
+                       align: 'center',
+                       width: '5%',
+                       events: {
+                           'click .Activo': function (e, value, row, index) {
+
+                               var que = $(e.target).hasClass("glyphicon-ok");
+                               $(e.target).removeClass("glyphicon-remove").removeClass("glyphicon-ok")
+
+                               $.post("/Productos/Borrar", { idProducto: row.idProducto, activar: !que }, function (devuelta) {
+                                   $(e.target).addClass(devuelta ? "glyphicon-ok" : "glyphicon-remove");
+                               });
+
+
+                           }
+                       },
+                       formatter: function operateFormatter(value, row, index) {
+                           return "<a style='cursor:pointer' class='Activo' title='Activar'><i class='glyphicon " + (value ? "glyphicon-ok" : "glyphicon-remove") + "'></i></a>";
+                           //return "<a style='cursor:pointer' class='Borrar' title='Borrar'><i class='glyphicon glyphicon-trash'></i></a>";
+
+                       }
+                   }
+            ];
+
+            var tabla = $("#tabla");
+            tabla.bootstrapTable({
+                url: "/Productos/Lista?todos=true",
+                method: "POST",
+                columns: columnas,
+                //pagination: true,
+                //sidePagination: 'client',
+                //method: "post",
+                //pageList: [10, 25, 50, 100],
+                //pageSize: 10
+            });
+
+            var abm = $("#abm").Magyp({
+                nombre: "Nuevo Producto",
+                fields: columnas,
+                boostrap: true,
+                unico: true,
+                url: '/Productos/Crear',
+                urlEditar: '/Productos/Editar',
+                grabado: function (editando, data, index) {
+                    tabla.bootstrapTable("refresh");
+                }
+            });
+
+            $("#AgregarNuevo").on("click", function () {
+                abm.Magyp("Mostrar", false);
+            });
+
+        </script>
+    }*@
+
+<style>
+    td:last-child {
+        text-align: center;
+    }
+
+    .ui-dialog {
+        z-index: 9999;
+    }
+
+    .jtable-busqueda {
+        color: #000000;
+    }
+</style>
+
+
+<div class="container-fluid" style="margin-top:70px">
+    <h2>Productos</h2>
+    <div id="Tabla"></div>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript">
+
+        $("a[href='/Productos/Productos']").closest("li").addClass("active");
+
+        var tabla = $('#Tabla').jtable({
+            title: 'Listado de Productos',
+            buscar: true,
+            prefijo: "id",
+            paging: true,
+            sorting: true,
+            pageSizes: [10, 25, 50, 100, 250, 500, "Todo"],
+            actions: {
+                listAction: '/Productos/Lista',
+                //createAction: '/Productos/Crear',
+                createAction: function (postData) {
+                    return $.Deferred(function ($dfd) {
+                        var formData = new FormData($("#jtable-create-form")[0]);
+                        $.ajax({
+                            url: '/Productos/Crear',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json',
+                            success: function (data) {
+                                $dfd.resolve(data);
+                            }
+                        });
+                    });
+                },
+                //updateAction: '/Productos/Editar',
+                updateAction: function (postData) {
+                    return $.Deferred(function ($dfd) {
+                        var formData = new FormData($("#jtable-edit-form")[0]);
+                        $.ajax({
+                            url: '/Productos/Editar',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json',
+                            success: function (data) {
+                                $dfd.resolve(data);
+                            }
+                        });
+                    });
+                },
+                deleteAction: '/Productos/Borrar',
+            },
+            fields: {
+                idProducto: {
+                    key: true,
+                    list: false
+                },
+                nombre: {
+                    title: 'Nombre',
+                    width: '15%',
+                    inputClass: 'validate[required]'
+                },
+                marca: {
+                    title: 'Marca',
+                    width: '10%',
+                    autocomplete: true
+                },
+                descripcion: {
+                    title: 'Descripcion',
+                    width: '20%',
+                    type: 'textarea'
+                },
+                proveedor: {
+                    title: 'Proveedor',
+                    width: '20%',
+                },
+                variedad: {
+                    title: 'Variedad',
+                    width: '20%',
+                },
+                cantidad: {
+                    title: 'Presentacion',
+                    width: '10%',
+                    inputClass: 'validate[required]'
+                },
+                imagen: {
+                    title: 'Imagen',
+                    excluirBusqueda: true,
+                    width: '10%',
+                    display: function (data) {
+                        var nombre = data.record.imagen;
+                        return '<img class="img_p" height="auto" width="150px" style="max-height: 200px;width: auto;max-width: 200px;" src=' + nombre + ' />';
+
+                    }
+                },
+                idCategoria: {
+                    title: 'Categoria',
+                    list: false,
+                    options: '/Categorias/ListaJ',
+                    create: true,
+                    edit: true,
+                },
+                categoria: {
+                    title: 'Categoria',
+                    width: '10%',
+                    create: false,
+                    dropdown: true,
+                    edit: false,
+                },
+                precio: {
+                    title: 'Precio',
+                    width: '5%',
+                    inputClass: 'validate[required,custom[number]]'
+
+                },
+                costo: {
+                    title: 'Costo',
+                    width: '5%',
+                    inputClass: 'validate[required,custom[number]]'
+
+                },
+                stock: {
+                    title: 'Stock',
+                    width: '5%',
+                    inputClass: 'validate[required]'
+
+                },
+                borrar: {
+                    title: 'Activo',
+                    width: '5%',
+                    create: false,
+                    edit: false,
+                    options: [{ Value: true, DisplayText: 'Si!' }, { Value: false, DisplayText: 'No' }]
+
+                }
+            },
+            formCreated: function (event, data) {
+                data.form.validationEngine({ promptPosition: "topLeft", scroll: false });
+                data.form.attr('enctype', 'multipart/form-data');
+
+                $("#Edit-imagen").attr("type", "file");
+
+                if (data.formType == "edit") {
+                    var text = $("#Edit-descripcion").val();
+                    $("#Edit-descripcion").val(text.replaceAll("<br/>", ""));
+                }
+                else {
+                    $("#Edit-stock").val("-1");
+                }
+
+            },
+            formSubmitting: function (event, data) {
+                return data.form.validationEngine('validate');
+            },
+            formClosed: function (event, data) {
+                data.form.validationEngine('hide');
+                data.form.validationEngine('detach');
+            },
+            recordUpdated: function (event, data) {
+                var d = new Date();
+                $(data.row).find(".img_p").attr("src", data.record.imagen + "?" + d.getTime());
+            }
+        });
+        tabla.jtable('load');
+
+
+
+    </script>
+}

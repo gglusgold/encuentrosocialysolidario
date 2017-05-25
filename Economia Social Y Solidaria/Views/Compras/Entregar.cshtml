@@ -1,0 +1,239 @@
+﻿@model List<Economia_Social_Y_Solidaria.Controllers.VecinxsComunaAux>
+    @{
+        ViewBag.Title = "Entregar";
+        Layout = "~/Views/Compartida/_layout.cshtml";
+    }
+
+    <style>
+        .modal .modal-body {
+            max-height: 420px;
+            overflow-y: auto;
+        }
+    </style>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 style="margin-top: 0px">Entregar</h2>
+            </div>
+            <div class="col-md-6">
+                <a id="ExportarExcel" href="/Compras/ExportarEncargado" target="_blank" class="btn btn-primary" style="float: right;"><span class="fa fa-file-excel-o"></span>Generar Reporte</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="tabla" class="table table-bordered bg_blanco table-hover"></table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="entregaParcial" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <form id="form_entregar">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Entregar Pedido</h4>
+                    </div>
+                    <div class="modal-body" id="parte_uno" style="display:block">
+                        <table class="table" id="tabla_listado">
+                            <caption>Listado de compras.</caption>
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="50%">Producto</th>
+                                    <th width="10%">Cantidad</th>
+                                    <th width="10%">No usados</th>
+                                    <th width="35%">Reubicar</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot>
+
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <button type="button" data-loading-text="Espere..." class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="confirmada" data-loading-text="Espere..." class="btn btn-success">Terminar</button>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </form>
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+
+
+    <select class="vecinxs" style="display:none" data-placeholder="Elegi un vecino" multiple>
+        @foreach (var comuna in Model)
+        {
+            <optgroup label="Comuna @comuna.ComunaNombre">
+                @foreach (var Vecinx in comuna.Vecinos)
+                {
+                    <option value="@Vecinx.IdVecinx">@Vecinx.Nombre</option>
+                }
+            </optgroup>
+        }
+    </select>
+
+    @section scripts{
+        <script type="text/javascript">
+
+            var columnas = [
+                   {
+                       //estos son de bootstrap table
+                       field: "idCompra",
+                       visible: false,
+                   },
+                   {
+                       field: "nombre",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Vecino",
+                       sortable: "true",
+                   },
+                   {
+                       field: "productos",
+                       align: 'left',
+                       valign: 'middle',
+                       title: "Productos",
+                       sortable: "true",
+                   },
+                   {
+                       field: "precio",
+                       align: 'center',
+                       valign: 'middle',
+                       title: "Total",
+                   },
+                   {
+                       field: 'retiro',
+                       title: 'Retiró?',
+                       valign: 'middle',
+                       align: 'center',
+                       width: '5%',
+                       events: {
+                           'click .Retiro': function (e, value, row, index) {
+
+                               $("#tabla_listado").attr("data-idcompra", row.idCompra)
+                               $("#entregaParcial").modal("show");
+                               $("#tabla_listado").find("tbody").empty();
+                               $.each(row.productos.split("<br/>"), function (i, val) {
+
+                                   var info = $(val).text().match(/\[(.*)\]/).pop().split("|");
+                                   var id = info[0];
+                                   var cantidad = info[1];
+                                   var noUsado = 0;
+
+                                   var input = $("<input name='pcantidad' type='number' max='" + cantidad + "' value='" + noUsado + "' min='0'/>");
+                                   var tr = $("<tr><input name='pid' type='hidden' value='" + id + "'/><td>" + (i + 1) + "</td><td>" + val.substring(val.indexOf(")") + 1) + "</td><td>" + cantidad + "</td><td></td><td></td></tr>");
+
+                                   $("#tabla_listado").find("tbody").append(tr);
+                                   //vecinxs
+
+                                   //console.log(i, val);
+                                   var lista = $(".vecinxs").clone();
+                                   lista.removeAttr("class");
+                                   lista.attr("name", "vecinxs");
+                                   lista.show();
+
+                                   var ids = [];
+
+                                   var td = tr.find("td:eq(4)").empty().append(lista);
+                                   tr.find("td:eq(3)").empty().append(input);
+
+                                   lista.chosen({
+                                       disable_search_threshold: 10,
+                                       no_results_text: "No se encontró informacion!",
+                                       width: "100%",
+                                       ax_selected_options: 3,
+                                       include_group_label_in_selected: true,
+                                       allow_duplicates: true
+                                   });
+                                   lista.on('change', function (evt, params) {
+
+                                       if (params.selected !== undefined)
+                                           ids.push(params.selected)
+
+                                       if (params.deselected !== undefined)
+                                           ids.splice(ids.indexOf(params.deselected), 1);
+
+                                       input.attr("max", cantidad - ids.length);
+
+                                       if (cantidad < ids.length)
+                                           alert("¡Hay mas vecinxs que productos!");
+
+                                       lista.attr("data-vecinxs", ids);
+                                   });
+                               });
+
+
+                           },
+                           'click .Colgo': function (e, value, row, index) {
+
+                               $(e.target).removeAttr("class").empty().addClass("fa fa-circle-o-notch fa-spin fa-fw").closest("a").addClass("notactive");
+                               $.post("/Compras/EnregarPedido", { idCompra: row.idCompra, entregado: true }, function (devuelta) {
+                                   $(e.target).removeAttr("class").addClass("fa fa-thumbs-o-down").closest("a").removeClass("notactive");
+                               });
+
+                               //$(e.target).removeAttr("class").addClass("fa fa-circle-o-notch fa-spin fa-fw").closest("a").addClass("notactive");
+                               //$.post("/Compras/EnregarPedido", { idCompra: row.idCompra, entregado: false }, function (devuelta) {
+                               //    $(e.target).removeAttr("class").addClass("fa fa-thumbs-o-down").closest("a").removeClass("notactive");
+                               //});
+                           },
+                       },
+                       formatter: function operateFormatter(value, row, index) {
+                           if (value != 3 && value != 5) {
+                               return "<a style='cursor:pointer' class='Colgo' title='Retiro'>Si</a> - <a style='cursor:pointer' class='Retiro' title='Colgo'>Editar</a>";
+                           }
+                           else if (value == 3)
+                               return '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>'
+                           else
+                               return '<i class="fa fa-thumbs-o-down" aria-hidden="true"></i>'
+
+                       }
+                   }
+            ];
+
+            var tabla = $("#tabla");
+            tabla.bootstrapTable({
+                url: "/Compras/ListaTanda",
+                method: "POST",
+                columns: columnas
+            });
+
+            $("#form_entregar").submit(function (e) {
+                e.preventDefault();
+                var cantidad = [];
+                var ids = [];
+                var vecinxs = [];
+
+                var idCompra = $(this).find("table").data("idcompra");
+                $.each($(this).find("table tr"), function (i, val) {
+                    if ($(val).find("input[name='pid']").val() != undefined) {
+
+                        var vecinx = $(val).find(":input[name='vecinxs']").data("vecinxs");
+
+                        ids.push($(val).find("input[name='pid']").val());
+                        cantidad.push($(val).find("input[name='pcantidad']").val());
+                        vecinxs.push(vecinx === undefined ? null : vecinx);
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Compras/EnregarPedido",
+                    data: { idCompra: idCompra, entregado: true, ids: ids, noUsados: cantidad, vecinxs: vecinxs },
+                    dataType: "json",
+                    traditional: true,
+                    success: function (response) {
+                        $("#entregaParcial").modal("hide");
+                        tabla.bootstrapTable("refresh");
+                    }
+                });
+
+                return false;
+            });
+        </script>
+    }

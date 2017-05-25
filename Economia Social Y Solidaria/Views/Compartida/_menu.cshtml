@@ -1,0 +1,359 @@
+﻿@using Economia_Social_Y_Solidaria.Models;
+@{
+    TanoNEEntities ctx = new TanoNEEntities();
+    Vecinos actual = ctx.Vecinos.FirstOrDefault(a => a.correo == User.Identity.Name);
+    int[] roles = new int[] { };
+    string nombres = "";
+    if (actual != null)
+    {
+        nombres = actual.nombres;
+        roles = actual.RolesVecinos.OrderBy(b => b.Roles.codigoRol).Select(a => a.Roles.codigoRol).ToArray();
+    }
+
+}
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @*@if (@ViewBag.Title == "Detalle")
+                {
+                    <a class="btn btn-link" id="volver_atras" style="float:left; vertical-align:middle" href="#"><i class="fa fa-arrow-left fa-2x"></i></a>
+                }*@
+            <a class="navbar-brand" style="float:left; vertical-align:middle" href="#">Nuevo Encuentro</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="~/Noticias/Portada">Noticias</a></li>
+                <li><a href="~/Compras/Carrito">Comprar!</a></li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li><a href="~/Compras/Historial">Mis Compras</a></li>
+                }
+                @*<li><a href="~/Compras/Carrito">Productos de Almacén</a></li>*@
+                @*<li><a href="#">Contacto</a></li>*@
+                @foreach (int rol in roles)
+                {
+                    if (rol == 2)
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+                            <ul class="dropdown-menu" style="position: absolute;">
+                                <li><a href="~/Productos/Productos">Productos</a></li>
+                                <li><a href="~/Categorias/Categorias">Categorias</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="~/Comentarios/Comentarios">Comentarios</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="~/Tandas/Tandas">Tandas</a></li>
+                                <li><a id="ComprasTanda" href="#">Ver Compras por Tandas</a></li>
+                                <li><a href="~/Locales/Locales">Locales</a></li>
+                                @*<li><a href="~/Productos/Asignar">Asigan Productos - Local</a></li>*@
+                                <li role="separator" class="divider"></li>
+                                <li><a href="~/Estadisticas/Estadisticas">Estadisticas</a></li>
+                                <li><a href="~/Vecinos/Vecino">Administrar</a></li>
+                                @*<li role="separator" class="divider"></li>
+                                    <li><a href="~/Noticias/Cargar">Noticias</a></li>*@
+                            </ul>
+                        </li>
+
+                    }
+                    @*if (rol == 3)
+                        {
+                            <li><a href="~/Finanzas/Listado">Finanzas</a></li>
+                        }*@
+                if (rol == 4)
+                {
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Encargado <span class="caret"></span></a>
+                        <ul class="dropdown-menu" style="position: absolute;">
+                            <li><a href="~/Compras/Entregar">Entregar</a></li>
+                            <li><a href="~/Tandas/VerCompras">Ver Compras</a></li>
+                        </ul>
+                    </li>
+
+                    @*<li><a href="~/Compras/Encargar">Encargar</a></li>*@
+                }
+                if (rol == 5)
+                {
+                    <li><a href="~/Noticias/Cargar">Cargar Noticias</a></li>
+                    }
+                }
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                @if (nombres == "")
+                {
+                    <li><a id="btn_iniciar" style="cursor:pointer">Iniciar Sesión</a></li>
+                    <li><a id="btn_registrarse" style="cursor:pointer">Registrarse</a></li>
+                }
+                else
+                {
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@nombres <span class="caret"></span></a>
+                        <ul class="dropdown-menu" style="position: absolute;">
+                            <li><a id="btn_perfil" style="cursor:pointer">Mi Perfil</a></li>
+                            <li><a id="btn_cerrar" href="/Inicio/CerrarSesion">Cerrar sesión</a></li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<div class="modal fade" id="login" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form id="login-form" action="~/Inicio/IniciarSesion" method="post" role="form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Iniciar Sesión</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" name="usuario" id="usuario" tabindex="1" class="form-control" placeholder="Correo Electrónico" value="" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="pass" id="pass" tabindex="2" class="form-control" placeholder="Contraseña" required>
+                    </div>
+                    <div class="alert  alert-dismissable" id="divError" style="display:none">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <p id="sError"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-sm-offset-3">
+                                <input data-loading-text="Espere..." type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-primary" value="Iniciar Sesión">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="text-center">
+                                    <a style="cursor:pointer" id="olvidepass" tabindex="5" class="forgot-password">Te olvidaste la contraseña?</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </form>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="modal fade" id="registrarse" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="register-form" action="~/Inicio/IniciarSesion" method="post" role="form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Registrarse</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Correo Electrónico" required="required" value="">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="nombres" id="nombres" tabindex="2" class="form-control" placeholder="Nombre y Apellido" required="required" value="">
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <input type="tel" name="telefono" pattern=".*\S+.*" id="telefono" tabindex="3" class="form-control" placeholder="Telefono" required="required" value="">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <select name="comuna" id="comuna" tabindex="4" class="form-control" required="required">
+                                <option value="">Comuna donde vivis</option>
+                                <option value="1">Comuna 1 ( Retiro, San Nicolás, Puerto Madero, San Telmo, Montserrat y Constitución )</option>
+                                <option value="2">Comuna 2 ( Recoleta )</option>
+                                <option value="3">Comuna 3 ( San Cristóbal y Balvanera )</option>
+                                <option value="4">Comuna 4 ( Boca, Barracas, Parque Patricios y Nueva Pompeya )</option>
+                                <option value="5">Comuna 5 ( Almagro y Boedo )</option>
+                                <option value="6">Comuna 6 ( Caballito )</option>
+                                <option value="7">Comuna 7 ( Flores y Parque Chacabuco )</option>
+                                <option value="8">Comuna 8 ( Villa Soldati, Villa Riachuelo y Villa Lugan )</option>
+                                <option value="9">Comuna 9 ( Parque Avellaneda, Liniers y Mataderos )</option>
+                                <option value="10">Comuna 10 ( Villa Real, Monte Castro, Versalles, Floresta, Vélez Sarsfield y Villa Luro )</option>
+                                <option value="11">Comuna 11 ( Villa Gral. Mitre, Villa Devoto, Villa del Parque y Villa Santa Rita )</option>
+                                <option value="12">Comuna 12 ( Coghlan, Saavedra, Villa Urquiza y Villa Pueyrredón )</option>
+                                <option value="13">Comuna 13 ( Belgrano, Núñez y Colegiales )</option>
+                                <option value="14">Comuna 14 ( Palermo )</option>
+                                <option value="15">Comuna 15 ( Chacarita, Villa Crespo, Paternal, Villa Ortúzar y Agronomía )</option>
+                                <option value="16">Gran Bs As</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <input type="password" name="password" id="password" tabindex="5" class="form-control" required="required" placeholder="Contraseña" max="12" min="6">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="password" name="confirmpassword" id="confirmpassword" tabindex="6" class="form-control" required="required" placeholder="Confirmar contraseña" max="12" min="6">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-sm-offset-3">
+                                <input type="submit" data-loading-text="Espere..." name="register-submit" id="register-submit" tabindex="7" class="form-control btn btn-primary" value="Registrarse">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-center">
+                                <a href="" tabindex="8" class="forgot-password">No te llegó el mail de registro?</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="olvideform" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="register-form" action="~/Inicio/OlvidePass" method="post" role="form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Me olvidé la contraseña!!</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Ingrese su correo electronico, recibira un correo con la información necesaria para cambiar la contraseña</p>
+                    <div class="form-group">
+                        <input type="email" name="emailolvido" id="emailolvido" tabindex="1" class="form-control" placeholder="Correo Electrónico" required="required" value="">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-sm-offset-3">
+                                <input type="submit" data-loading-text="Espere..." name="register-submit" id="register-submit" tabindex="7" class="form-control btn btn-primary" value="Me olvide!">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="cambiar" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="register-form" action="~/Inicio/Cambiar" method="post" role="form">
+                <input type="hidden" name="k" id="k">
+                <input type="hidden" name="emaila" id="emaila">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Me olvidé la contraseña!!</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Ingrese las nueva contraseña</p>
+                    <div class="form-group">
+                        <input type="email" name="emailolvido" id="emailolvido" tabindex="1" class="form-control" placeholder="Correo Electrónico" disabled required="required" value="">
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <input type="password" name="password1" id="password1" tabindex="5" class="form-control" required="required" placeholder="Contraseña" max="12" min="6">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="password" name="confirmpassword1" id="confirmpassword1" tabindex="6" class="form-control" required="required" placeholder="Confirmar contraseña" max="12" min="6">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-6 col-sm-offset-3">
+                                <input type="submit" data-loading-text="Espere..." name="register-submit" id="register-submit" tabindex="7" class="form-control btn btn-primary" value="Cambiar!">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div id="perfilform" style="display:none">
+    <input type="hidden" value="idVecinx" />
+    <div class="form-group">
+        <label for="emailperfil" class="col-md-4 control-label">Correo Electrónico</label>
+        <div class="col-md-8">
+            <input required type="email" name="emailperfil" id="emailperfil" tabindex="1" class="form-control" placeholder="Correo Electrónico" required="required" value="">
+        </div>
+        <span id="helpBlock" class="help-block text-danger pull-right" style="padding-right:15px;display:none; color:red">ATENCION! Si cambias el mail, vas a tener que verificarlo de vuelta!</span>
+    </div>
+    <div class="form-group">
+        <label for="nombreperfil" class="col-md-4 control-label">Nombre</label>
+        <div class="col-md-8">
+            <input required type="text" name="nombreperfil" id="nombreperfil" tabindex="2" class="form-control" placeholder="Nombre y Apellido" required="required" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="telefonoperfil" class="col-md-4 control-label">Telefono</label>
+        <div class="col-md-8">
+            <input required type="tel" name="telefonoperfil" pattern=".*\S+.*" id="telefonoperfil" tabindex="3" class="form-control" placeholder="Telefono" required="required" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="comunaperfil" class="col-md-4 control-label">Comuna</label>
+        <div class="col-md-8">
+            <select required name="comunaperfil" id="comunaperfil" tabindex="4" class="form-control" required="required">
+                <option value="">Comuna donde vivis</option>
+                <option value="1">Comuna 1 ( Retiro, San Nicolás, Puerto Madero, San Telmo, Montserrat y Constitución )</option>
+                <option value="2">Comuna 2 ( Recoleta )</option>
+                <option value="3">Comuna 3 ( San Cristóbal y Balvanera )</option>
+                <option value="4">Comuna 4 ( Boca, Barracas, Parque Patricios y Nueva Pompeya )</option>
+                <option value="5">Comuna 5 ( Almagro y Boedo )</option>
+                <option value="6">Comuna 6 ( Caballito )</option>
+                <option value="7">Comuna 7 ( Flores y Parque Chacabuco )</option>
+                <option value="8">Comuna 8 ( Villa Soldati, Villa Riachuelo y Villa Lugan )</option>
+                <option value="9">Comuna 9 ( Parque Avellaneda, Liniers y Mataderos )</option>
+                <option value="10">Comuna 10 ( Villa Real, Monte Castro, Versalles, Floresta, Vélez Sarsfield y Villa Luro )</option>
+                <option value="11">Comuna 11 ( Villa Gral. Mitre, Villa Devoto, Villa del Parque y Villa Santa Rita )</option>
+                <option value="12">Comuna 12 ( Coghlan, Saavedra, Villa Urquiza y Villa Pueyrredón )</option>
+                <option value="13">Comuna 13 ( Belgrano, Núñez y Colegiales )</option>
+                <option value="14">Comuna 14 ( Palermo )</option>
+                <option value="15">Comuna 15 ( Chacarita, Villa Crespo, Paternal, Villa Ortúzar y Agronomía )</option>
+                <option value="16">Gran Bs As</option>
+            </select>
+        </div>
+    </div>
+   <div id="alertasperfil"></div>
+</div>
+
+<div class="modal fade" id="perfil" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="perfil-form" method="post" class="form-horizontal" role="form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Mi perfil</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="EditarPerfil" class="btn btn-warning">Editar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-loading-text="Espere...">Cerrar</button>
+                    <button type="submit" id="GuardarPerfil" class="btn btn-primary" style="display:none" data-loading-text="Espere...">Grabar Cambios</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>

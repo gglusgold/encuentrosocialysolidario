@@ -1,0 +1,237 @@
+﻿@{
+    ViewBag.Title = "Vecino";
+    Layout = "~/Views/Compartida/_layout.cshtml";
+}
+
+<style>
+    .modal-dialog{
+        width:800px!important;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 style="margin-top: 0">Vecines</h2>
+        </div>
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-12">
+            <table id="tabla" class="table table-bordered bg_blanco table-hover"></table>
+            <div id="abm"></div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-confirm" title="Borrar Usuario?" style="display:none">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>Seguro que queres borrar el usuario?</p>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        var columnas = [
+               {
+                   //estos son de bootstrap table
+                   field: "idVecino",
+                   valign: 'middle',
+                   visible: false,
+                   edit: true,
+                   opciones: {
+                       diseño: {
+                           cssDiv: { display: "none" }
+                       },
+                   }
+               },
+               {
+                   field: "nombres",
+                   align: 'center',
+                   valign: 'middle',
+                   title: "Nombres",
+                   sortable: "true",
+               },
+               {
+                   field: "correo",
+                   align: 'left',
+                   valign: 'middle',
+                   title: "Correo",
+                   sortable: "true",
+               },
+               {
+                   field: "telefono",
+                   align: 'center',
+                   valign: 'middle',
+                   title: "Telefono",
+                   sortable: "true",
+               },
+               {
+                   field: "comuna",
+                   align: 'center',
+                   valign: 'middle',
+                   title: "Comuna",
+                   sortable: "true",
+                   formatter: function operateFormatter(value, row, index) {
+                       console.log(value);
+                       if (value == 16)
+                           return "Gran Bs. As"
+                       else
+                           return "Comuna " + value;
+                   }
+               },
+               {
+                   field: "fechaCreado",
+                   align: 'center',
+                   valign: 'middle',
+                   title: "Fecha registro",
+                   sortable: "true"
+               },
+               {
+                   field: "administrador",
+                   title: 'Administrar usuarios',
+                   sortable: "true",
+                   align: 'center',
+                   valign: 'middle',
+                   events: {
+                       'click .Retiro': function (e, value, row, index) {
+
+                           var que = $(e.target).hasClass("glyphicon-ok");
+                           $(e.target).removeAttr("class").addClass("fa fa-circle-o-notch fa-spin fa-fw").closest("a").addClass("notactive");
+                           $.post("/Vecinos/Editar", { idVecino: row.idVecino, administrador: !que }, function (devuelta) {
+                               $(e.target).removeAttr("class").addClass(devuelta.admin ? "glyphicon glyphicon-ok" : "glyphicon glyphicon-remove").closest("a").removeClass("notactive");
+                           });
+
+                       }
+                   },
+                   formatter: function operateFormatter(value, row, index) {
+                       return "<a style='cursor:pointer' class='Retiro' title='Administrar'><i class='glyphicon " + (value ? "glyphicon-ok" : "glyphicon-remove") + "'></i></a>";
+
+                   }
+               },
+               {
+                   field: "contador",
+                   title: 'Finanzas',
+                   sortable: "true",
+                   align: 'center',
+                   valign: 'middle',
+                   events: {
+                       'click .Retiro': function (e, value, row, index) {
+
+                           var que = $(e.target).hasClass("glyphicon-ok");
+                           $(e.target).removeAttr("class").addClass("fa fa-circle-o-notch fa-spin fa-fw").closest("a").addClass("notactive");
+                           $.post("/Vecinos/Editar", { idVecino: row.idVecino, contador: !que }, function (devuelta) {
+                               $(e.target).removeAttr("class").addClass(devuelta.contador ? "glyphicon glyphicon-ok" : "glyphicon glyphicon-remove").closest("a").removeClass("notactive");
+                           });
+
+                       }
+                   },
+                   formatter: function operateFormatter(value, row, index) {
+                       return "<a style='cursor:pointer' class='Retiro' title='Finanzas'><i class='glyphicon " + (value ? "glyphicon-ok" : "glyphicon-remove") + "'></i></a>";
+
+                   }
+               },
+               {
+                   field: "encargado",
+                   title: 'Encargado',
+                   sortable: "true",
+                   align: 'center',
+                   valign: 'middle',
+                   create: true,
+                   events: {
+                       'click .Retiro': function (e, value, row, index) {
+
+                           var que = $(e.target).hasClass("glyphicon-ok");
+                           $(e.target).removeAttr("class").addClass("fa fa-circle-o-notch fa-spin fa-fw").closest("a").addClass("notactive");
+                           $.post("/Vecinos/Editar", { idVecino: row.idVecino, encargado: !que }, function (devuelta) {
+                               $(e.target).removeAttr("class").addClass(devuelta.encargado ? "glyphicon glyphicon-ok" : "glyphicon glyphicon-remove").closest("a").removeClass("notactive");
+                           });
+
+                       }
+                   },
+                   formatter: function operateFormatter(value, row, index) {
+                       return "<a style='cursor:pointer' class='Retiro' title='Encargado'><i class='glyphicon " + (value ? "glyphicon-ok" : "glyphicon-remove") + "'></i></a>";
+
+                   }
+               },
+               {
+                   field: "noticias",
+                   title: 'Noticias',
+                   sortable: "true",
+                   align: 'center',
+                   valign: 'middle',
+                   create: true,
+                   events: {
+                       'click .Retiro': function (e, value, row, index) {
+
+                           var que = $(e.target).hasClass("glyphicon-ok");
+                           $(e.target).removeAttr("class").addClass("fa fa-circle-o-notch fa-spin fa-fw").closest("a").addClass("notactive");
+                           $.post("/Vecinos/Editar", { idVecino: row.idVecino, noticias: !que }, function (devuelta) {
+                               $(e.target).removeAttr("class").addClass(devuelta.noticias ? "glyphicon glyphicon-ok" : "glyphicon glyphicon-remove").closest("a").removeClass("notactive");
+                           });
+
+                       }
+                   },
+                   formatter: function operateFormatter(value, row, index) {
+                       return "<a style='cursor:pointer' class='Retiro' title='Encargado'><i class='glyphicon " + (value ? "glyphicon-ok" : "glyphicon-remove") + "'></i></a>";
+
+                   }
+               },
+               {
+                   field: "borrar",
+                   title: 'Borrar',
+                   align: 'center',
+                   valign: 'middle',
+                   events: {
+                       'click .Borrar': function (e, value, row, index) {
+
+                           $("#dialog-confirm").dialog({
+                               resizable: false,
+                               height: "auto",
+                               width: 400,
+                               modal: true,
+                               buttons: {
+                                   "Aceptar": function () {
+                                       $(this).dialog("close");
+                                       $.post("/Vecinos/Borrar", { idVecino: row.idVecino }, function () {
+                                           tabla.bootstrapTable("refresh");
+                                       })
+                                   },
+                                   "Cancelar": function () {
+                                       $(this).dialog("close");
+                                   }
+                               }
+                           });
+
+                       }
+                   },
+                   formatter: function operateFormatter(value, row, index) {
+                       return "<a style='cursor:pointer' class='Borrar' title='Borrar'><img src='/Imagenes/Fijas/trash.png'></a>";
+
+                   }
+               }
+        ];
+
+        var tabla = $("#tabla");
+        tabla.bootstrapTable({
+            url: "/Vecinos/Lista",
+            method: "POST",
+            columns: columnas
+        });
+
+        var abm = $("#abm").Magyp({
+            nombre: "Vecines",
+            fields: columnas,
+            boostrap: true,
+            unico: true,
+            url: '/Vecinos/Crear',
+            urlEditar: '/Vecinos/Editar',
+            grabado: function (editando, data, index) {
+                tabla.bootstrapTable("refresh");
+            }
+        });
+
+        $("#AgregarNuevo").on("click", function () {
+            abm.Magyp("Mostrar", false);
+        });
+
+    </script>
+}
